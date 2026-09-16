@@ -1,0 +1,240 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh-Hans\n"
+
+msgid "Opaque"
+msgstr "不透明"
+
+msgid "Cutout"
+msgstr "镂空"
+
+msgid "Transparent"
+msgstr "半透明"
+
+msgid "Shadow Bias"
+msgstr "阴影偏移"
+
+msgid "Outline Width"
+msgstr "描边宽度"
+
+msgid "Outline Color"
+msgstr "描边颜色"
+
+msgid "Outline Z Offset"
+msgstr "描边 Z 轴偏移"
+
+msgid "From Vertex Color"
+msgstr "来自顶点颜色"
+
+msgid "Backlight Sharpness"
+msgstr "背光锐度"
+
+msgid "Backlight Range"
+msgstr "背光范围"
+
+msgid "Fur"
+msgstr "毛发"
+
+msgid "Fur Noise"
+msgstr "毛发噪声"
+
+msgid "Noise Tiling"
+msgstr "噪声平铺"
+
+msgid "Subdivision"
+msgstr "细分"
+
+msgid "Vector"
+msgstr "向量"
+
+msgid "Rim Light Color"
+msgstr "边缘光颜色"
+
+msgid "Fresnel Power"
+msgstr "菲涅尔强度（边缘光/反射范围）"
+
+msgid "Anti Light"
+msgstr "防光照/压制强光"
+
+# [NT-FEAT 3] 受光（着色）方向里视线方向的权重：0 = 完全跟随真实光照，1.5 = 原行为
+msgid "Shade Direction Bias"
+msgstr "受光方向偏移（视线权重）"
+
+# [NT-FEAT 1] lilToon 兼容的光照调整 —— 本次新增
+msgid "Light Min Limit"
+msgstr "光照下限"
+
+msgid "Light Max Limit"
+msgstr "光照上限"
+
+msgid "Monochrome Lighting"
+msgstr "单色光照"
+
+msgid "As Unlit"
+msgstr "无光照（不受光）"
+
+# 补齐原中文漏翻的一条（_NTDitherTex，NonToon 与 NonToonFur 共用）
+msgid "Dither"
+msgstr "抖动"
+
+
+# [NT-L10N] 汉化补齐
+
+msgid "Ref"
+msgstr "参考值"
+
+msgid "Comp"
+msgstr "比较函数"
+
+msgid "Pass"
+msgstr "通过时操作"
+
+msgid "Outline Ref"
+msgstr "描边参考值"
+
+msgid "Outline Comp"
+msgstr "描边比较函数"
+
+msgid "Outline Pass"
+msgstr "描边通过时操作"
+
+msgid "Cull"
+msgstr "剔除"
+
+msgid "SrcBlendRGB"
+msgstr "源混合（RGB）"
+
+msgid "DstBlendRGB"
+msgstr "目标混合（RGB）"
+
+msgid "SrcBlendAlpha"
+msgstr "源混合（Alpha）"
+
+msgid "DstBlendAlpha"
+msgstr "目标混合（Alpha）"
+
+msgid "SrcBlendRGB ForwardAdd"
+msgstr "源混合（RGB・前向附加）"
+
+msgid "DstBlendRGB ForwardAdd"
+msgstr "目标混合（RGB・前向附加）"
+
+msgid "SrcBlendAlpha ForwardAdd"
+msgstr "源混合（Alpha・前向附加）"
+
+msgid "DstBlendAlpha ForwardAdd"
+msgstr "目标混合（Alpha・前向附加）"
+
+msgid "ZWrite"
+msgstr "深度写入"
+
+msgid "AlphaToMask"
+msgstr "Alpha 转遮罩"
+
+msgid "Outline Offset Factor"
+msgstr "描边偏移系数"
+
+msgid "Outline Offset Units"
+msgstr "描边偏移单位"
+
+msgid "Off"
+msgstr "关闭"
+
+msgid "Front"
+msgstr "正面"
+
+msgid "Back"
+msgstr "背面"
+
+msgid "Details"
+msgstr "细节"
+
+msgid "Distance Fade"
+msgstr "距离淡出"
+
+msgid "Emission"
+msgstr "发光"
+
+msgid "Hair Specular"
+msgstr "头发高光"
+
+msgid "Lighten"
+msgstr "提亮"
+
+msgid "MatCaps"
+msgstr "材质捕捉"
+
+msgid "Nearer"
+msgstr "近平面修正"
+
+msgid "Rim Light"
+msgstr "边缘光"
+
+msgid "Rim Shade"
+msgstr "边缘阴影"
+
+msgid "SelfLight"
+msgstr "自有光源"
+
+msgid "Shade"
+msgstr "阴影"
+
+msgid "ShadowColor"
+msgstr "阴影颜色"
+
+msgid "Specular"
+msgstr "高光"
+
+msgid "Copy"
+msgstr "复制"
+
+msgid "Paste"
+msgstr "粘贴"
+
+msgid "Reset"
+msgstr "重置"
+
+msgid "Revert"
+msgstr "还原"
+
+msgid "Copy Name"
+msgstr "复制属性名"
+
+msgid "Apply to parent"
+msgstr "应用到父级"
+
+msgid "From Shader"
+msgstr "跟随着色器"
+
+msgid "Geometry"
+msgstr "几何体（2000）"
+
+msgid "AlphaTest"
+msgstr "镂空队列（2450）"
+
+msgid "Locked properties cannot be overriden by a child."
+msgstr "被锁定的属性无法被子级覆盖。"
+
+msgid "This property is set and locked by an ancestor."
+msgstr "该属性由父级设置并锁定。"
+
+msgid "Pre Color"
+msgstr "前趟颜色"
+
+msgid "Pre Cutoff"
+msgstr "前趟裁剪阈值"
+
+msgid "PrePass Cull"
+msgstr "前趟剔除"
+
+msgid "PrePass ZWrite"
+msgstr "前趟深度写入"
+
+msgid "PrePass SrcBlendRGB"
+msgstr "前趟源混合（RGB）"
+
+msgid "PrePass DstBlendRGB"
+msgstr "前趟目标混合（RGB）"

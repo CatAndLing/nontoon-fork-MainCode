@@ -1,0 +1,252 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh-Hans\n"
+
+msgid "SelfLight"
+msgstr "自有光源"
+
+msgid "Self Light"
+msgstr "启用自有光源"
+
+msgid "Color"
+msgstr "颜色"
+
+msgid "Intensity"
+msgstr "强度"
+
+msgid "Direction (world, toward light)"
+msgstr "光照方向（世界空间，指向光源）"
+
+msgid "Only This Light"
+msgstr "只由它照亮（忽略世界光）"
+
+msgid "Shadow Map"
+msgstr "阴影贴图（烘焙）"
+
+msgid "Shadow Origin"
+msgstr "阴影原点"
+
+msgid "Shadow Right"
+msgstr "阴影右轴"
+
+msgid "Shadow Up"
+msgstr "阴影上轴"
+
+msgid "Shadow Forward"
+msgstr "阴影前轴"
+
+msgid "Shadow Half Width"
+msgstr "阴影半宽"
+
+msgid "Shadow Half Height"
+msgstr "阴影半高"
+
+msgid "Shadow Near"
+msgstr "阴影近平面"
+
+msgid "Shadow Far"
+msgstr "阴影远平面"
+
+msgid "Shadow Strength"
+msgstr "阴影强度"
+
+msgid "Shadow Bias"
+msgstr "阴影偏移"
+
+# [NT-L10N] 汉化补齐
+
+msgid "Copy"
+msgstr "复制"
+
+msgid "Paste"
+msgstr "粘贴"
+
+msgid "Reset"
+msgstr "重置"
+
+msgid "Revert"
+msgstr "还原"
+
+msgid "Copy Name"
+msgstr "复制属性名"
+
+msgid "Apply to parent"
+msgstr "应用到父级"
+
+msgid "From Shader"
+msgstr "跟随着色器"
+
+msgid "Opaque"
+msgstr "不透明"
+
+msgid "Cutout"
+msgstr "镂空"
+
+msgid "Geometry"
+msgstr "几何体（2000）"
+
+msgid "AlphaTest"
+msgstr "镂空队列（2450）"
+
+msgid "Transparent"
+msgstr "半透明（3000）"
+
+msgid "Locked properties cannot be overriden by a child."
+msgstr "被锁定的属性无法被子级覆盖。"
+
+msgid "This property is set and locked by an ancestor."
+msgstr "该属性由父级设置并锁定。"
+
+# [NT-FEAT 10] 类 PCSS 软阴影（参考 PCSS4VRC 的思路，但不需要实时光）
+msgid "Shadow Texels"
+msgstr "阴影贴图像素"
+
+msgid "PCSS Soft Shadow"
+msgstr "PCSS 软阴影"
+
+msgid "Softness"
+msgstr "柔度"
+
+msgid "Shadow Density"
+msgstr "阴影浓度"
+
+msgid "Shadow Clamp"
+msgstr "阴影硬化（压成硬边）"
+
+msgid "Shadow Distance"
+msgstr "阴影距离（超出即关闭，0 = 不限制）"
+
+msgid "Receive Mask"
+msgstr "接收遮罩"
+
+msgid "Receive Mask Strength"
+msgstr "接收遮罩强度"
+
+# [NT-FEAT 12] 画质档位（性能不再是约束）
+msgid "PCSS Quality"
+msgstr "PCSS 画质"
+
+msgid "Low"
+msgstr "低（8+12）"
+
+msgid "Medium"
+msgstr "中（12+24）"
+
+msgid "High"
+msgstr "高（20+40）"
+
+msgid "Ultra"
+msgstr "极高（32+64）"
+
+# [NT-FEAT 20] ⑥ 实时自阴影（PCSS 采样 Unity 的实时阴影贴图，仅聚光灯 / 仅 PC）
+msgid "Realtime PCSS (Spot)"
+msgstr "实时 PCSS（聚光灯，仅 PC）"
+
+msgid "  Realtime Softness"
+msgstr "实时软硬倍率"
+
+msgid "  Realtime Light Size"
+msgstr "实时虚拟灯尺寸（越大越软；avatar 自遮挡建议 64~160）"
+
+msgid "  Realtime Bias (m)"
+msgstr "实时深度偏移（米；压自遮挡粉刺）"
+
+# [NT-FEAT 16/17] 色温与环境匹配
+msgid "Use Color Temperature"
+msgstr "使用色温（Kelvin）"
+
+msgid "Color Temperature (K)"
+msgstr "色温（K，6500 = 中性白）"
+
+msgid "Match World Light Color"
+msgstr "匹配世界光颜色"
+
+msgid "Match World Light Direction"
+msgstr "匹配世界光方向"
+
+# [NT-FEAT 18/19] 自由度相关：光源编号、屏蔽环境光、阴影颜色与遮罩、自备阴影贴图
+msgid "Accept Light ID"
+msgstr "只接受哪一路光源（0 = 任意）"
+
+msgid "Any"
+msgstr "任意"
+
+msgid "Block World Ambient"
+msgstr "屏蔽地图环境光（0 = 不屏蔽）"
+
+msgid "Shadow Color"
+msgstr "阴影颜色（暗部染什么色，默认黑）"
+
+msgid "Shadow Strength Mask"
+msgstr "阴影强度遮罩"
+
+msgid "Shadow Mask Strength"
+msgstr "阴影遮罩强度"
+
+msgid "Map (Advanced)"
+msgstr "阴影贴图映射（进阶）"
+
+msgid "Shadow Map (custom)"
+msgstr "阴影贴图（可自备：灰度 = 离光源近平面的归一化距离）"
+
+
+msgid "Map Origin"
+msgstr "贴图原点（世界空间）"
+
+msgid "Map Right"
+msgstr "贴图右轴"
+
+msgid "Map Up"
+msgstr "贴图上轴"
+
+msgid "Map Forward"
+msgstr "贴图光轴（光线传播方向）"
+
+msgid "Map Half Width"
+msgstr "贴图半宽（世界单位）"
+
+msgid "Map Half Height"
+msgstr "贴图半高（世界单位）"
+
+msgid "Map Near"
+msgstr "贴图近平面"
+
+msgid "Map Far"
+msgstr "贴图远平面"
+
+msgid "  Realtime Quality 0-3"
+msgstr "实时采样档（0=最省 3=最平滑）"
+
+msgid "  Realtime Shadow Floor"
+msgstr "实时阴影下限（完全遮蔽处保留的灯光比例；0=纯黑）"
+
+# [NT-FIX 23] `__` 前缀的内部运行期属性（面板里灰色不可改）——2026-09-17 用户截图指出仍是英文
+msgid "__Realtime Shadow Depth (runtime)"
+msgstr "__实时阴影深度（运行期，只读）"
+
+msgid "__Realtime Shadow Texels"
+msgstr "__实时阴影纹素数"
+
+msgid "__Realtime Shadow Near"
+msgstr "__实时阴影近平面"
+
+msgid "__Realtime Shadow Far"
+msgstr "__实时阴影远平面"
+
+msgid "__Realtime Light Pos"
+msgstr "__实时光源位置"
+
+msgid "__Realtime W2S0"
+msgstr "__实时世界→阴影矩阵第 0 行"
+
+msgid "__Realtime W2S1"
+msgstr "__实时世界→阴影矩阵第 1 行"
+
+msgid "__Realtime W2S2"
+msgstr "__实时世界→阴影矩阵第 2 行"
+
+msgid "__Realtime W2S3"
+msgstr "__实时世界→阴影矩阵第 3 行"

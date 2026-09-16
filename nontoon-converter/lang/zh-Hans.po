@@ -1,0 +1,636 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh-Hans\n"
+
+# ============================================================
+# [NT-L10N] 工具包（转换器 + 自阴影组件）简体中文翻译表
+#
+# key   = C# 里保留的英文原文
+# value = 显示用的中文；未命中的 key 会原样显示英文（英文 fallback）
+#
+# 注意：值里不要出现英文双引号，也不要出现反斜杠转义（POParser 是简单实现）。
+# 带 {0} {1} 的是 string.Format 模板。
+# ============================================================
+
+# ---- 报告 / 日志 ----
+msgid "lilToon to NonToon Converter report"
+msgstr "lilToon → NonToon 转换报告"
+
+msgid "Converter version: "
+msgstr "转换器版本："
+
+msgid "Generated: "
+msgstr "生成时间："
+
+msgid "Target NonToon: "
+msgstr "目标 NonToon："
+
+msgid "Target Shader Core: "
+msgstr "目标 Shader Core："
+
+msgid "Installed packages: NonToon "
+msgstr "已安装：NonToon "
+
+msgid ", Shader Core "
+msgstr "，Shader Core "
+
+msgid "Success: {0}, Warnings: {1}, Unsupported: {2}, Errors: {3}"
+msgstr "成功 {0} / 警告 {1} / 不支持 {2} / 错误 {3}"
+
+msgid "  Output: "
+msgstr "  输出："
+
+msgid "Success"
+msgstr "成功"
+
+msgid "Warning"
+msgstr "警告"
+
+msgid "Unsupported"
+msgstr "不支持"
+
+msgid "Error"
+msgstr "错误"
+
+# ---- 安装状态 ----
+msgid "not found"
+msgstr "未安装"
+
+msgid "NonToon {0} (target {1}), Shader Core {2} (target {3})"
+msgstr "NonToon {0}（目标 {1}），Shader Core {2}（目标 {3}）"
+
+msgid "NonToon and/or NonToonFur shader was not found. Install NonToon {0} and Shader Core {1} through VPM."
+msgstr "找不到 NonToon 与/或 NonToonFur 着色器。请先通过 VPM 安装 NonToon {0} 与 Shader Core {1}。"
+
+msgid "NonToon core and detected modules are available. "
+msgstr "NonToon 本体与检测到的模块都可用。"
+
+msgid "The shaders are available, but the installed versions are older than the tested target. "
+msgstr "着色器可用，但已安装版本低于本转换器测试过的目标版本。"
+
+msgid "Missing NonToon modules: "
+msgstr "缺少 NonToon 模块："
+
+msgid ". Related features will be reported and skipped."
+msgstr "。相关功能会被报告并跳过。"
+
+msgid "NonToon or NonToonFur was not found. Install NonToon {0} and Shader Core {1} through VPM first."
+msgstr "找不到 NonToon 或 NonToonFur。请先通过 VPM 安装 NonToon {0} 与 Shader Core {1}。"
+
+msgid "WARNING: Installed package versions are older than the tested target. {0}. Update through VPM, then convert again."
+msgstr "警告：已安装的包版本低于本转换器测试过的目标版本（{0}）。请通过 VPM 更新后重新转换。"
+
+# ---- 转换总览 ----
+msgid "Skipped: material shader is not lilToon."
+msgstr "已跳过：材质用的不是 lilToon 着色器。"
+
+msgid "Used a source-GUID suffix in the output material name to prevent same-name materials from overwriting each other in this shared output folder."
+msgstr "输出材质名加了源 GUID 后缀，避免同名材质在同一个输出目录里互相覆盖。"
+
+msgid "Create NonToon material"
+msgstr "创建 NonToon 材质"
+
+msgid "No stack trace available."
+msgstr "没有可用的堆栈信息。"
+
+msgid "Decals, dissolve, glitter, refraction, gem, audio link and animated UVs are not reproduced."
+msgstr "贴花、溶解、闪烁、折射、宝石、AudioLink 与 UV 动画不会被复现。"
+
+msgid "NonToon does not provide a one-to-one equivalent for all lilToon shadow, emission, and fur parameters. Review converted materials visually."
+msgstr "NonToon 并非对所有 lilToon 的阴影、发光与毛发参数都有一一对应项，转换后请目视检查材质。"
+
+# ---- 主色 / 贴图烘焙 ----
+msgid "Referenced lilToon main texture directly because _Color is white; no base texture was baked."
+msgstr "因为 _Color 是白色，直接引用了 lilToon 主贴图，没有烘焙基础贴图。"
+
+msgid "Baked lilToon Main 1st color multiplier into the generated NonToon Base Texture."
+msgstr "已把 lilToon 第 1 层主色乘算烘焙进生成的 NonToon 基础贴图。"
+
+msgid "Detected active lilToon Main 2nd layer and baked it into the generated NonToon Base Texture."
+msgstr "检测到启用的 lilToon 第 2 层主色，已烘焙进 NonToon 基础贴图。"
+
+msgid "Detected active lilToon Main 3rd layer and baked it into the generated NonToon Base Texture."
+msgstr "检测到启用的 lilToon 第 3 层主色，已烘焙进 NonToon 基础贴图。"
+
+msgid "WARNING: Main color could not be baked; assigned _MainTex without the _Color multiplier."
+msgstr "警告：主色无法烘焙，已直接指定 _MainTex（没有乘算 _Color）。"
+
+msgid "Baked lilToon _Color into a solid NonToon base texture because _MainTex is empty."
+msgstr "_MainTex 为空，已把 lilToon 的 _Color 烘焙成纯色的 NonToon 基础贴图。"
+
+msgid "WARNING: Main color multiplier was not baked because texture baking is disabled."
+msgstr "警告：贴图烘焙已关闭，主色乘算没有烘焙。"
+
+msgid "WARNING: lilToon Alpha Mask could not be baked because Main Texture is empty."
+msgstr "警告：主贴图为空，lilToon 的 Alpha 遮罩无法烘焙。"
+
+msgid "Baked lilToon Alpha Mask into the generated NonToon Base Texture alpha channel."
+msgstr "已把 lilToon 的 Alpha 遮罩烘焙进 NonToon 基础贴图的 Alpha 通道。"
+
+msgid "WARNING: lilToon Alpha Mask requires Base Texture baking and was not copied because baking is disabled."
+msgstr "警告：lilToon 的 Alpha 遮罩依赖基础贴图烘焙，因为烘焙已关闭而没有复制。"
+
+msgid "WARNING: lilToon Alpha Mask could not be read and was not baked."
+msgstr "警告：lilToon 的 Alpha 遮罩无法读取，没有烘焙。"
+
+msgid "WARNING: lilToon Alpha Mask mode {0} is unsupported and was not baked."
+msgstr "警告：lilToon 的 Alpha 遮罩模式 {0} 不支持，没有烘焙。"
+
+msgid "WARNING: lilToon Bump 2nd Scale Mask could not be baked; Details G uses white instead."
+msgstr "警告：lilToon 的第二法线缩放遮罩无法烘焙，细节 G 改用白色。"
+
+msgid "Baked Main layers at {0}x{1}, matching the largest participating source texture (Main 1st was {2}x{3})."
+msgstr "已按 {0}x{1} 烘焙主色各层，与参与烘焙的最大源贴图一致（第 1 层为 {2}x{3}）。"
+
+msgid "WARNING: {0} layer was not baked because its texture could not be read."
+msgstr "警告：{0} 层贴图无法读取，没有参与烘焙。"
+
+msgid "WARNING: {0} blend mask could not be read; the layer was not baked."
+msgstr "警告：{0} 的混合遮罩无法读取，该层没有参与烘焙。"
+
+msgid "WARNING: {0} uses UV mode {1}; its bake is approximated with UV0."
+msgstr "警告：{0} 使用 UV 模式 {1}，烘焙时按 UV0 近似处理。"
+
+msgid "WARNING: {0} Alpha Mode {1} is unsupported and was ignored."
+msgstr "警告：{0} 的 Alpha 模式 {1} 不支持，已忽略。"
+
+msgid "WARNING: {0} decal/mirror options are not reproduced by the Base Texture bake; only its UV0 texture, color, alpha and blend mask are baked."
+msgstr "警告：基础贴图烘焙不会复现 {0} 的贴花/镜像选项，只烘焙它的 UV0 贴图、颜色、Alpha 与混合遮罩。"
+
+msgid "WARNING: {0} dissolve settings are not reproduced by the Base Texture bake."
+msgstr "警告：基础贴图烘焙不会复现 {0} 的溶解设置。"
+
+msgid "Baked {0} texture, color, blend mask and blend mode into the NonToon base texture."
+msgstr "已把 {0} 的贴图、颜色、混合遮罩与混合模式烘焙进 NonToon 基础贴图。"
+
+msgid "Generated editable Shader Core Shared Mask (.scmask). Use the Edit button in the NonToon material Inspector to change its RGBA sources."
+msgstr "已生成可编辑的 Shader Core 共享遮罩（.scmask）。可在 NonToon 材质的检视面板里用编辑按钮修改它的 RGBA 来源。"
+
+msgid "WARNING: Shader Core .scmask generation was unavailable; generated a PNG Shared Mask instead."
+msgstr "警告：无法生成 Shader Core 的 .scmask，已改为生成 PNG 共享遮罩。"
+
+msgid "WARNING: Shared Mask {0} source is not a Texture2D and cannot be stored in .scmask; it uses white instead."
+msgstr "警告：共享遮罩 {0} 的来源不是 Texture2D，无法存入 .scmask，改用白色。"
+
+msgid "WARNING: Texture '{0}' is not a Texture2D and cannot be baked."
+msgstr "警告：贴图 {0} 不是 Texture2D，无法烘焙。"
+
+msgid "WARNING: Could not read texture '{0}': {1}"
+msgstr "警告：无法读取贴图 {0}：{1}"
+
+msgid "Prepare texture for NonToon conversion"
+msgstr "准备 NonToon 转换所需的贴图"
+
+msgid "Temporarily decompressed Crunch texture '{0}' to bake it; its importer settings will be restored."
+msgstr "为烘焙临时解压了 Crunch 贴图 {0}，它的导入设置稍后会还原。"
+
+msgid "Restore texture importer after NonToon conversion"
+msgstr "NonToon 转换后还原贴图导入设置"
+
+# ---- 法线 / 粗糙度 / 高光 ----
+msgid "Assigned lilToon normal map to NonToon Details A (Detail0 Normal Map)."
+msgstr "已把 lilToon 法线贴图指定到 NonToon 的细节 A（Detail0 法线贴图）。"
+
+msgid "MISSING MODULE Details: assigned normal map to NonToon base Normal Map instead of Details A."
+msgstr "缺少模块 Details：法线贴图改为写入 NonToon 的基础法线贴图，而不是细节 A。"
+
+msgid "MISSING MODULE Details: second normal map was not converted."
+msgstr "缺少模块 Details：第二法线贴图没有转换。"
+
+msgid "Assigned lilToon second normal map to NonToon Details B (Detail1 Normal Map)."
+msgstr "已把 lilToon 的第二法线贴图指定到 NonToon 的细节 B（Detail1 法线贴图）。"
+
+msgid "Generated NonToon Details RGBA mask: R=1st Normal, G=2nd Normal/Scale Mask, B/A=unused."
+msgstr "已生成 NonToon 细节 RGBA 遮罩：R=第一法线，G=第二法线/缩放遮罩，B/A=未使用。"
+
+msgid "Copied lilToon Cutoff to NonToon Cutoff."
+msgstr "已复制 lilToon 的裁剪阈值到 NonToon 的裁剪阈值。"
+
+msgid "Mapped lilToon Smoothness to NonToon physical Roughness using (1 - Smoothness)^2."
+msgstr "已按 (1 - 平滑度)^2 把 lilToon 的平滑度映射到 NonToon 的物理粗糙度。"
+
+msgid "Set NonToon Roughness to 0.5 because lilToon reflection is disabled."
+msgstr "lilToon 的反射未启用，NonToon 的粗糙度设为 0.5。"
+
+msgid "NOTICE: Visually readjust NonToon Roughness and Specular after conversion; lilToon and NonToon use different reflection models."
+msgstr "提示：转换后请目视重新调整 NonToon 的粗糙度与高光，两者的反射模型不同。"
+
+msgid "WARNING: lilToon Smoothness Texture is per-pixel and cannot be represented by NonToon's scalar Roughness."
+msgstr "警告：lilToon 的平滑度贴图是逐像素的，无法用 NonToon 的标量粗糙度表示。"
+
+msgid "WARNING: lilToon Metallic Gloss Map was not used for Roughness; Metallic is not a NonToon Roughness equivalent."
+msgstr "警告：lilToon 的金属光泽贴图没有用于粗糙度，金属度并不等价于 NonToon 的粗糙度。"
+
+msgid "MISSING MODULE Specular: reflection/specular was not converted."
+msgstr "缺少模块 Specular：反射/高光没有转换。"
+
+msgid "Disabled NonToon Specular because lilToon Reflection and Apply Specular were not both enabled."
+msgstr "lilToon 的反射与「应用高光」没有同时启用，已关闭 NonToon 的高光。"
+
+msgid "Mapped lilToon Reflection color to NonToon Specular; Smoothness is mapped to Roughness."
+msgstr "已把 lilToon 的反射颜色映射到 NonToon 的高光，平滑度映射到粗糙度。"
+
+# ---- 光照调整 ----
+msgid "Copied lilToon lighting adjustments 1:1 (identical property names): {0}."
+msgstr "已按 1:1 复制 lilToon 的光照调整（属性名相同）：{0}。"
+
+msgid "NOTICE: the source had none of _AsUnlit / _LightMinLimit / _LightMaxLimit / _MonochromeLighting, so NonToon's defaults were kept."
+msgstr "提示：源材质没有 _AsUnlit / _LightMinLimit / _LightMaxLimit / _MonochromeLighting，已保留 NonToon 的默认值。"
+
+msgid "Set Shade Direction Bias to 0 so the toon shade follows the real light direction like lilToon (raise it back toward 1.5 for NonToon's original view-biased look)."
+msgstr "已把「受光方向偏移」设为 0，让卡通阴影像 lilToon 一样跟随真实光照方向（想恢复 NonToon 原有的视线偏向观感，可以调回 1.5 附近）。"
+
+# ---- 阴影 ----
+msgid "MISSING MODULE Shade: lilToon shadow settings were not converted."
+msgstr "缺少模块 Shade：lilToon 的阴影设置没有转换。"
+
+msgid "Copied lilToon shadow settings to NonToon's native ShadowColor module (border/blur/strength/2nd/3rd/border colour preserved 1:1) and disabled the Shade ramp to avoid stacking."
+msgstr "已把 lilToon 的阴影设置复制到 NonToon 原生的 ShadowColor 模块（边界/模糊/强度/第 2、3 层/边界颜色 1:1 保留），并关闭 Shade 渐变以免叠加。"
+
+msgid "MISSING MODULE Shade/RimShade: color ramps could not be assigned."
+msgstr "缺少模块 Shade/RimShade：颜色渐变无法指定。"
+
+msgid "Converted lilToon shadow colors and Border/Blur thresholds to a NonToon Shade ramp."
+msgstr "已把 lilToon 的阴影颜色与边界/模糊阈值转换为 NonToon 的 Shade 渐变。"
+
+msgid "WARNING: NonToon Shade ramps have no per-pixel Shadow Strength Mask input; lilToon Shadow Strength Mask was not copied."
+msgstr "警告：NonToon 的明暗渐变没有逐像素的阴影强度遮罩输入，lilToon 的阴影强度遮罩没有复制。"
+
+msgid "WARNING: NonToon Shade ramps have no per-pixel Shadow Border Mask input; lilToon Shadow Border Mask was not copied."
+msgstr "警告：NonToon 的明暗渐变没有逐像素的阴影边界遮罩输入，lilToon 的阴影边界遮罩没有复制。"
+
+msgid "WARNING: NonToon Shade ramps have no per-pixel Shadow Blur Mask input; lilToon Shadow Blur Mask was not copied."
+msgstr "警告：NonToon 的明暗渐变没有逐像素的阴影模糊遮罩输入，lilToon 的阴影模糊遮罩没有复制。"
+
+# ---- 共享遮罩 ----
+msgid "Shared mask channels: R=MatCap Add Blend Mask, G=MatCap Multiply Blend Mask, B=RimShade Mask, A=shared white mask for Specular/RimLight/Lighten/HairSpecular."
+msgstr "共享遮罩通道：R=MatCap 加算混合遮罩，G=MatCap 正片叠底混合遮罩，B=边缘阴影遮罩，A=供高光/边缘光/提亮/头发高光共用的白色遮罩。"
+
+msgid "Mapped lilToon Emission Blend Mask to Shared Mask {0} and assigned it to NonToon Lighten."
+msgstr "已把 lilToon 的发光混合遮罩映射到共享遮罩 {0}，并指定给 NonToon 的提亮。"
+
+msgid "WARNING: Emission Blend Mask uses Shared Mask A because R/G/B are occupied; Specular, RimLight and HairSpecular may also be limited by this mask."
+msgstr "警告：因为 R/G/B 已被占用，发光混合遮罩改用共享遮罩 A；高光、边缘光与头发高光也可能受这个遮罩限制。"
+
+# ---- 毛发 ----
+msgid "WARNING: The installed NonToonFur shader has no Fur Noise properties; fur-specific values were not converted."
+msgstr "警告：已安装的 NonToonFur 着色器没有毛发噪声属性，毛发相关参数没有转换。"
+
+msgid "Mapped lilToon Fur Noise Mask and texture tiling to NonToonFur Fur Noise / Noise Tiling ({0})."
+msgstr "已把 lilToon 的毛发噪声遮罩与贴图平铺映射到 NonToonFur 的毛发噪声/噪声平铺（{0}）。"
+
+msgid "WARNING: The installed NonToonFur shader has no Noise Tiling property; only the Fur Noise Mask was copied."
+msgstr "警告：已安装的 NonToonFur 没有噪声平铺属性，只复制了毛发噪声遮罩。"
+
+msgid "WARNING: NonToonFur Fur Noise has one tiling value only; lilToon non-uniform Noise scale and offset were approximated."
+msgstr "警告：NonToonFur 的毛发噪声只有一个平铺值，lilToon 的非等比缩放与偏移已近似处理。"
+
+msgid "Mapped lilToon Fur Layer Num to NonToonFur Subdivision ({0})."
+msgstr "已把 lilToon 的毛发层数映射到 NonToonFur 的细分（{0}）。"
+
+msgid "Mapped lilToon Fur Vector direction and length to NonToonFur Fur Vector."
+msgstr "已把 lilToon 的毛发方向与长度映射到 NonToonFur 的毛发向量。"
+
+msgid "WARNING: NonToonFur has no Fur Vector Texture or vertex-color direction input; detailed lilToon fur direction was approximated with Fur Vector."
+msgstr "警告：NonToonFur 没有毛发方向贴图与顶点色方向输入，lilToon 的精细毛发方向已用毛发向量近似。"
+
+msgid "WARNING: NonToonFur has no lilToon-equivalent Fur Gravity or Randomize control; these fur direction modifiers were not converted."
+msgstr "警告：NonToonFur 没有等价于 lilToon 的毛发重力与随机化控制，这些毛发方向修饰没有转换。"
+
+# ---- 描边 ----
+msgid "WARNING: Outline is unavailable in the installed NonToon shader."
+msgstr "警告：已安装的 NonToon 着色器没有描边功能。"
+
+msgid "Mapped lilToon Outline color and width to NonToon; vertex-color outline={0}."
+msgstr "已把 lilToon 的描边颜色与宽度映射到 NonToon；顶点色描边={0}。"
+
+msgid "NOTICE: NonToon uses vertex RGB as the outline direction and vertex A for Z Offset; lilToon vertex-color outline modes are approximated."
+msgstr "提示：NonToon 用顶点 RGB 作为描边方向、顶点 A 作为 Z 偏移，lilToon 的顶点色描边模式为近似处理。"
+
+msgid "WARNING: NonToon standard Outline has no equivalent for lilToon Outline Texture, Width Mask, or Z Bias; those settings were not copied."
+msgstr "警告：NonToon 的标准描边没有 lilToon 的描边贴图、宽度遮罩与 Z 偏移对应项，这些设置没有复制。"
+
+# ---- MatCap ----
+msgid "MISSING MODULE MatCaps: matcap was not converted."
+msgstr "缺少模块 MatCaps：MatCap 没有转换。"
+
+msgid "NOTICE: Visually readjust converted MatCaps; lilToon and NonToon use different matcap UV, lighting, mask, and blend behavior, so the material appearance can change significantly."
+msgstr "提示：转换后的 MatCap 请目视重调，两者的 MatCap UV、受光、遮罩与混合方式都不同，观感可能差异明显。"
+
+msgid "Mapped one lilToon Add MatCap and one Multiply MatCap to their matching NonToon slots."
+msgstr "已把 lilToon 的一个加算 MatCap 与一个正片叠底 MatCap 映射到对应的 NonToon 槽位。"
+
+msgid "WARNING: Both lilToon MatCaps are not one Add and one Multiply pair; converted 1st MatCap only, using its closest NonToon blend slot."
+msgstr "警告：lilToon 的两个 MatCap 并非一加算一正片叠底，只转换了第 1 个 MatCap，并使用最接近的 NonToon 混合槽位。"
+
+msgid "{0} mapped to NonToon {1} with Shared Mask {2}; copied RGB tint without converting lilToon opacity into color intensity."
+msgstr "已把 {0} 映射到 NonToon 的 {1}（共享遮罩 {2}）；只复制了 RGB 着色，没有把 lilToon 的不透明度换算成颜色强度。"
+
+msgid "NOTICE: {0} lilToon opacity {1} has no direct NonToon MatCap control and was not converted; visually adjust the MatCap color or mask after conversion."
+msgstr "提示：{0} 的 lilToon 不透明度 {1} 在 NonToon 里没有直接的 MatCap 控制项，没有转换；转换后请目视调整 MatCap 颜色或遮罩。"
+
+msgid "WARNING: {0} blend mode {1} was approximated as NonToon {2}."
+msgstr "警告：{0} 的混合模式 {1} 已近似为 NonToon 的 {2}。"
+
+# ---- 边缘光 / 边缘阴影 / 背光 ----
+msgid "MISSING MODULE RimLight: rim light was not converted."
+msgstr "缺少模块 RimLight：边缘光没有转换。"
+
+msgid "Mapped rim light Border/Blur/Fresnel Power to NonToon RimLight Range ({0}–{1})."
+msgstr "已把边缘光的边界/模糊/菲涅尔映射到 NonToon 的边缘光范围（{0}–{1}）。"
+
+msgid "MISSING MODULE RimShade: rim shade was not converted."
+msgstr "缺少模块 RimShade：边缘阴影没有转换。"
+
+msgid "Converted lilToon rim-shade color and Border/Blur/Fresnel Power to a NonToon RimShade ramp."
+msgstr "已把 lilToon 的边缘阴影颜色与边界/模糊/菲涅尔转换为 NonToon 的 RimShade 渐变。"
+
+msgid "WARNING: Installed NonToon shader has no Backlight properties; lilToon Backlight was not converted."
+msgstr "警告：已安装的 NonToon 着色器没有背光属性，lilToon 的背光没有转换。"
+
+msgid "Mapped lilToon Backlight Border directly to NonToon Backlight Range and inverse Blur to Backlight Sharpness (toon strength)."
+msgstr "已把 lilToon 的背光边界直接映射到 NonToon 的背光范围，并把模糊反向后映射到背光锐度（卡通强度）。"
+
+msgid "WARNING: NonToon Backlight controls light shaping only; lilToon Backlight color and color texture were not reproduced."
+msgstr "警告：NonToon 的背光只控制受光形状，lilToon 的背光颜色与颜色贴图没有复现。"
+
+# ---- 距离淡出 ----
+msgid "MISSING MODULE DistanceFade: distance fade was not converted."
+msgstr "缺少模块 DistanceFade：距离淡出没有转换。"
+
+msgid "Mapped lilToon Distance Fade start/end in reverse order to preserve its fade direction in NonToon; copied strength."
+msgstr "为保持淡出方向，lilToon 距离淡出的起点/终点已按相反顺序映射到 NonToon；强度已复制。"
+
+msgid "WARNING: NonToon Distance Fade fades to black camera depth only; lilToon fade color, object-depth mode, and rim fade are not equivalent."
+msgstr "警告：NonToon 的距离淡出只按相机深度淡出到黑色，lilToon 的淡出色、物体深度模式与边缘淡出并不等价。"
+
+# ---- 头发高光 ----
+msgid "MISSING MODULE HairSpecular: anisotropy was not converted."
+msgstr "缺少模块 HairSpecular：各向异性没有转换。"
+
+msgid "Mapped lilToon anisotropy strength, shift and tangent width to an approximate NonToon Hair Specular ramp."
+msgstr "已把 lilToon 的各向异性强度、偏移与切线宽度近似映射到 NonToon 的头发高光渐变。"
+
+# ---- 发光 ----
+msgid "Copied lilToon emission 1:1 to NonToon's native Emission module (colour / map / blend / blend mask / main strength / blend mode)."
+msgstr "已把 lilToon 的发光 1:1 复制到 NonToon 原生的 Emission 模块（颜色/贴图/混合/混合遮罩/受主色影响/混合模式）。"
+
+msgid " Source material had no "
+msgstr "；源材质没有以下属性："
+
+msgid "; NonToon defaults were kept for those."
+msgstr "，这些项保留了 NonToon 的默认值。"
+
+msgid "WARNING: lilToon 2nd emission (_UseEmission2nd) has no NonToon equivalent and was not converted."
+msgstr "警告：lilToon 的第二发光（_UseEmission2nd）在 NonToon 里没有对应项，没有转换。"
+
+msgid "WARNING: lilToon {0} has no NonToon equivalent and was not converted."
+msgstr "警告：lilToon 的 {0} 在 NonToon 里没有对应项，没有转换。"
+
+msgid "MISSING MODULE Lighten: emission was not converted."
+msgstr "缺少模块 Lighten：发光没有转换。"
+
+msgid "Skipped NonToon Lighten because lilToon Emission has zero effective strength after Color Alpha and Blend were applied."
+msgstr "lilToon 的发光在乘算颜色 Alpha 与混合强度后有效强度为 0，已跳过 NonToon 的提亮。"
+
+msgid "Mapped lilToon Emission Blend Mask to NonToon Lighten Shared Mask {0}."
+msgstr "已把 lilToon 的发光混合遮罩映射到 NonToon 提亮的共享遮罩 {0}。"
+
+msgid "WARNING: Emission Blend Mask requires texture baking; the Shared Mask was not generated, so Lighten uses its default mask."
+msgstr "警告：发光混合遮罩需要烘焙贴图，共享遮罩没有生成，提亮会使用默认遮罩。"
+
+msgid "WARNING: NonToon Lighten has no colored emission texture; only lilToon emission intensity was mapped."
+msgstr "警告：NonToon 的提亮没有彩色发光贴图，只映射了 lilToon 的发光的强度。"
+
+msgid "Mapped lilToon grayscale emission effective strength (RGB × Alpha × Blend = {0}) to NonToon Lighten."
+msgstr "已把 lilToon 灰度发光的有效强度（RGB × Alpha × 混合 = {0}）映射到 NonToon 的提亮。"
+
+# ---- 渲染模式 / 模板 ----
+msgid "Mapped lilToon rendering mode to NonToon {0}."
+msgstr "已把 lilToon 的渲染模式映射到 NonToon 的 {0}。"
+
+msgid "WARNING: lilToon transparent/refraction/gem rendering is approximated as NonToon transparent."
+msgstr "警告：lilToon 的半透明/折射/宝石渲染已近似为 NonToon 的半透明。"
+
+msgid "Mapped lilToon main/outline Stencil Ref, Comp and Pass to NonToon."
+msgstr "已把 lilToon 主材质/描边的模板参考值、比较函数与通过操作映射到 NonToon。"
+
+msgid "WARNING: NonToon has no matching Stencil read/write mask or Fail/ZFail setting; those lilToon values were not converted."
+msgstr "警告：NonToon 没有对应的模板读写遮罩与 Fail/ZFail 设置，这些 lilToon 值没有转换。"
+
+# ---- 诊断输出（仅在调试日志里）----
+msgid "=== Input material snapshot ==="
+msgstr "=== 源材质快照 ==="
+
+msgid "Source shader: "
+msgstr "源着色器："
+
+msgid "Target shader: "
+msgstr "目标着色器："
+
+msgid "Source layer decision: Main2nd="
+msgstr "源分层判断：Main2nd="
+
+msgid "Source effective reflection/specular: "
+msgstr "源有效反射/高光："
+
+msgid "Source effective emission strength: "
+msgstr "源有效发光强度："
+
+msgid "=== Generated assets and target application ==="
+msgstr "=== 生成的资源与目标写入 ==="
+
+msgid "Target module validation: Details="
+msgstr "目标模块校验：Details="
+
+msgid "No lilToon to NonToon debug log was found."
+msgstr "没有找到 lilToon → NonToon 的调试日志。"
+
+msgid "Last conversion"
+msgstr "上次转换"
+
+msgid "Converting lilToon materials"
+msgstr "正在转换 lilToon 材质"
+
+# ---- 窗口 / 其它 UI ----
+msgid "Open Latest Debug Log"
+msgstr "打开最新调试日志"
+
+msgid "Create Debug Log ZIP for Support"
+msgstr "生成反馈用调试日志 ZIP"
+
+msgid "WARNING: {0}"
+msgstr "警告：{0}"
+
+msgid "Opaque"
+msgstr "不透明"
+
+msgid "Cutout"
+msgstr "镂空"
+
+msgid "Transparent"
+msgstr "半透明"
+
+# ---- [NT-FEAT 11] 逐像素阴影遮罩 ----
+msgid "Copied lilToon per-pixel shadow masks (Strength / Border / Blur) into NonToon's ShadowColor module and enabled Use Shadow Masks."
+msgstr "已把 lilToon 的逐像素阴影遮罩（强度 / 边界 / 模糊）复制到 NonToon 的 ShadowColor 模块，并打开了「使用阴影遮罩」。"
+
+msgid "WARNING: the installed NonToon shader has no per-pixel shadow mask inputs; lilToon Shadow Strength/Border/Blur Masks were not copied."
+msgstr "警告：已安装的 NonToon 着色器没有逐像素阴影遮罩输入，lilToon 的阴影强度/边界/模糊遮罩没有复制。"
+
+msgid "Use Shadow Masks"
+msgstr "使用阴影遮罩"
+
+# ============================================================
+# [NT-FEAT 20] ⑥ 实时自阴影（组件面板 + 安装器 + 菜单）
+# ============================================================
+msgid "This light must be anchored in front of / above the avatar, otherwise no self-occlusion is visible and the shadow looks like it does nothing. Use the Install button to build a properly anchored rig (Neck position + Chest aim)."
+msgstr "这盏灯必须锚定在 avatar 的前上方：否则画面里看不到任何自遮挡，阴影会像是完全没生效。用下面的安装按钮可以一次生成正确的锚定灯架（PositionConstraint 跟脖子 + AimConstraint 看胸口）。"
+
+msgid "Hard limits (VRChat)"
+msgstr "VRChat 硬约束"
+
+msgid "Realtime lights force the avatar to the Poor performance rank (Lights = 1) and are NOT available on Quest. Shadow quality depends on the viewer's own Unity quality settings. Do not use Unity's Soft shadows: this component turns the light's Unity shadow off on purpose and provides the shadow itself."
+msgstr "实时光会把 avatar 强制打到 Poor 性能等级（Lights = 1），而且 Quest 完全不可用。半影质量取决于观看者自己的 Unity 画质设置。不要改用 Unity 的 Soft 阴影：本组件是故意关掉该灯的 Unity 阴影、由自己提供阴影的。"
+
+msgid "Shadow Floor is 0: fully shadowed areas will go pure black unless the material's Light Min Limit is above 0 or there is ambient light. Raise it to 0.2-0.3 if the model turns black."
+msgstr "阴影下限为 0：除非材质的 Light Min Limit 大于 0 或者场景有环境光，否则完全被遮蔽的地方会变成纯黑。模型如果发黑，把它调到 0.2~0.3。"
+
+msgid "Modular Avatar was not found in this project. The rig can still be built, but the Expression Menu will not be wired automatically. Install Modular Avatar (VCC) and run Install again to use the declarative path."
+msgstr "本工程里没找到 Modular Avatar。灯架仍然能建，但 Expression Menu 不会自动接上。装上 Modular Avatar（VCC）后再点一次安装即可走声明式路径。"
+
+msgid "Modular Avatar detected: the menu is installed declaratively (MergeAnimator / Parameters / MenuItem / MenuInstaller). Your FX controller, ExpressionParameters and ExpressionsMenu are never modified."
+msgstr "检测到 Modular Avatar：菜单会用声明式组件安装（MergeAnimator / Parameters / MenuItem / MenuInstaller），你的 FX 控制器、ExpressionParameters、ExpressionsMenu 都不会被改动。"
+
+msgid "Install / update the rig on this avatar"
+msgstr "在这只 avatar 上安装 / 更新灯架"
+
+msgid "Uninstall from this avatar"
+msgstr "从这只 avatar 卸载"
+
+msgid "This component is not under a scene-root avatar; put it under the avatar or use Tools/NonToon menu."
+msgstr "本组件不在场景根的 avatar 之下；请把它挂到 avatar 下面，或者用 Tools/NonToon 菜单。"
+
+msgid "Install realtime self shadow"
+msgstr "安装实时自阴影"
+
+msgid "Uninstall realtime self shadow"
+msgstr "卸载实时自阴影"
+
+msgid "Realtime softness (Light Size)"
+msgstr "实时软硬（灯尺寸）"
+
+msgid "Realtime shadow floor"
+msgstr "实时阴影下限"
+
+msgid "Realtime shadow on/off"
+msgstr "实时阴影开关"
+
+msgid "The scene ambient light is near black. Areas outside this spot light cone have no other light source, so they render pure black. That is lighting setup, not the shadow. Restore ambient in the Lighting window, or widen Spot Angle and Range so the cone covers the whole body."
+msgstr "场景环境光接近纯黑。这盏聚光灯锥体以外没有任何其它光源，所以那些地方会渲染成纯黑 —— 那是照明设置的问题，不是阴影。请在 Lighting 窗口恢复环境光，或者把 Spot Angle / Range 放宽到能覆盖整个身体。"
+
+# ---- ⑥ 检视面板：字段分组标题 ----
+msgid "Light"
+msgstr "光源"
+
+msgid "Shadow (PCSS)"
+msgstr "阴影（PCSS）"
+
+msgid "Depth map"
+msgstr "深度图"
+
+# ---- ⑥ 检视面板：字段标签 ----
+# 为什么必须自己画标签：`DrawDefaultInspector()` 用 Unity 的字段名美化当标签，
+# 于是显示成英文的 Target Light / Extra Casters / Light Size …，
+# 而同一次绘制里 resolution / softness 又被 Unity 的中文本地化翻成中文 ⇒ 中英混排。
+msgid "Shadow light"
+msgstr "阴影光源"
+
+msgid "Light intensity"
+msgstr "灯强度"
+
+msgid "Light color"
+msgstr "灯颜色"
+
+msgid "Realtime PCSS"
+msgstr "实时 PCSS"
+
+msgid "Virtual light size"
+msgstr "虚拟灯半径"
+
+msgid "Softness"
+msgstr "柔和度"
+
+msgid "Quality 0-3"
+msgstr "采样档 0-3"
+
+msgid "Shadow floor"
+msgstr "阴影下限"
+
+msgid "Depth bias (m)"
+msgstr "深度偏移（米）"
+
+msgid "Depth resolution"
+msgstr "深度图分辨率"
+
+msgid "Render depth every frame"
+msgstr "每帧渲染深度图"
+
+msgid "Extra casters"
+msgstr "额外投影体"
+
+msgid "Search root"
+msgstr "搜索根节点"
+
+msgid "Disable Unity shadows"
+msgstr "关闭 Unity 阴影"
+
+# ---- ⑥ 检视面板：字段提示 ----
+msgid "The Spot light that provides the shadow. Leave empty to auto-find a Spot in children."
+msgstr "提供阴影的那盏 Spot 光。留空则自动在子物体里找一盏 Spot。"
+
+msgid "Light intensity driven by this component (written back to Light.intensity). Also exposed to the in-game Expression Menu."
+msgstr "由本组件驱动的灯强度（会写回 Light.intensity）。它同时也接进了游戏内的 Expression Menu（「实时阴影 强度」）。"
+
+msgid "Light color driven by this component."
+msgstr "由本组件驱动的灯颜色。"
+
+msgid "Master switch. The Expression Menu drives this field, so it can be toggled in game."
+msgstr "总开关。ExpressionMenu 驱动的是这个字段，所以游戏内可以开关。"
+
+msgid "Penumbra size (texels at a 512 reference). Larger is softer. Self-occlusion on an avatar is only a few centimetres, so 32-128 is the useful range."
+msgstr "半影半径（以 512 纹素为基准）。越大越软。avatar 上的自遮挡距离只有几厘米，所以有效区间是 32~128。"
+
+msgid "Extra soft/hard multiplier on top of the light size."
+msgstr "在灯半径之上再乘一个软硬倍率。"
+
+msgid "Sample budget: 0 = 8/12, 1 = 12/24, 2 = 16/32, 3 = 24/32. Higher is smoother and more expensive."
+msgstr "采样预算：0 = 8/12、1 = 12/24、2 = 16/32、3 = 24/32。越高越平滑也越贵。"
+
+msgid "How much of the light survives in fully shadowed areas (0 = pure black). NonToon then clamps env + light to [_LightMinLimit, _LightMaxLimit]; _LightMinLimit defaults to 0, so without a floor the model turns black where there is no ambient light."
+msgstr "完全被遮蔽的地方保留多少比例的灯光（0 = 纯黑）。NonToon 随后会把 env + light 夹到 [_LightMinLimit, _LightMaxLimit]，而 _LightMinLimit 默认是 0，所以没有环境光时不留下限整个模型会发黑。"
+
+msgid "Depth offset in metres, used to suppress shadow acne on self-occlusion."
+msgstr "深度偏移（米），用来压掉自遮挡产生的阴影噪点（shadow acne）。"
+
+msgid "Depth map resolution. 512 is enough; 1024 is finer but costs more."
+msgstr "深度图分辨率。512 够用；1024 更细但更贵。"
+
+msgid "Render the depth map every frame. Turn off for troubleshooting."
+msgstr "每帧渲染深度图。关掉可以用于排查。"
+
+msgid "Extra renderers that should cast into the depth map (the avatar itself is collected automatically)."
+msgstr "额外要投进深度图的物体（avatar 自己会自动收集）。"
+
+msgid "Root used to scan for casters and target materials. Leave empty to use the topmost parent of this object."
+msgstr "扫描投影体与目标材质用的根节点。留空 = 自动取本物体所在层级的最顶层父节点。"
+
+msgid "Turn the light's Unity realtime shadow off: the shadow is provided entirely by this component plus PCSS."
+msgstr "把这盏灯的 Unity 实时阴影关掉：阴影完全由本组件 + PCSS 提供。"
+
+# ---- ⑥ 检视面板：与 ⑤ 亮度调整的关系 ----
+msgid "Too dark overall, especially where the light does not reach? Raise the material's Light Min Limit with Tools > NonToon > Brightness adjust (5). It lifts the whole result after this shadow has been applied, so the two compose instead of fighting."
+msgstr "整体太暗、尤其是灯照不到的地方？用 Tools > NonToon > ⑤ 亮度调整 抬高材质的亮度下限（_LightMinLimit）。它是在本阴影**之后**整体抬亮的，所以两者是叠加关系、不会互相打架。"

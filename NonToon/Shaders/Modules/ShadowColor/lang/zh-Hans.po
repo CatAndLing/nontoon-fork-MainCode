@@ -1,0 +1,112 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh-Hans\n"
+
+# [NT-FEAT 2] 模块名（来自 jp.lilxyzw.nontoon.shadowcolor.scmodule 的 "name"）
+msgid "ShadowColor"
+msgstr "阴影颜色"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "Shadow Color"
+msgstr "阴影颜色"
+
+msgid "Border"
+msgstr "边框"
+
+msgid "Blur"
+msgstr "模糊"
+
+msgid "2nd Color"
+msgstr "第二层颜色"
+
+msgid "2nd Border"
+msgstr "第二层边框"
+
+msgid "2nd Blur"
+msgstr "第二层模糊"
+
+msgid "3rd Color"
+msgstr "第三层颜色"
+
+msgid "3rd Border"
+msgstr "第三层边框"
+
+msgid "3rd Blur"
+msgstr "第三层模糊"
+
+msgid "Strength"
+msgstr "强度"
+
+msgid "Border Range"
+msgstr "边框范围"
+
+msgid "Border Color"
+msgstr "边框颜色"
+
+msgid "Contrast"
+msgstr "对比度"
+
+msgid "AA Strength"
+msgstr "抗锯齿强度"
+
+# [NT-L10N] 汉化补齐
+
+msgid "Copy"
+msgstr "复制"
+
+msgid "Paste"
+msgstr "粘贴"
+
+msgid "Reset"
+msgstr "重置"
+
+msgid "Revert"
+msgstr "还原"
+
+msgid "Copy Name"
+msgstr "复制属性名"
+
+msgid "Apply to parent"
+msgstr "应用到父级"
+
+msgid "From Shader"
+msgstr "跟随着色器"
+
+msgid "Opaque"
+msgstr "不透明"
+
+msgid "Cutout"
+msgstr "镂空"
+
+msgid "Geometry"
+msgstr "几何体（2000）"
+
+msgid "AlphaTest"
+msgstr "镂空队列（2450）"
+
+msgid "Transparent"
+msgstr "半透明（3000）"
+
+msgid "Locked properties cannot be overriden by a child."
+msgstr "被锁定的属性无法被子级覆盖。"
+
+msgid "This property is set and locked by an ancestor."
+msgstr "该属性由父级设置并锁定。"
+
+# [NT-FEAT 11] lilToon 的逐像素阴影遮罩（通道语义与 lilToon 一致）
+msgid "Use Shadow Masks"
+msgstr "使用阴影遮罩"
+
+msgid "Shadow Strength Mask"
+msgstr "阴影强度遮罩（R）"
+
+msgid "Shadow Border Mask"
+msgstr "阴影边界遮罩（RGB = 第 1/2/3 层）"
+
+msgid "Shadow Blur Mask"
+msgstr "阴影模糊遮罩（RGB = 第 1/2/3 层）"

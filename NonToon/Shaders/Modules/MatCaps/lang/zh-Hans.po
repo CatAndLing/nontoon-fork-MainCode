@@ -1,0 +1,68 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh-Hans\n"
+
+msgid "Lighten"
+msgstr "变亮"
+
+msgid "MatCaps"
+msgstr "材质捕捉"
+
+msgid "MatCap (Multiply)"
+msgstr "材质捕捉（正片叠底）"
+
+msgid "MatCap (Add)"
+msgstr "材质捕捉（加算）"
+
+msgid "Detail Normal"
+msgstr "细节法线"
+# [NT-FEAT 5] 0 = 两眼一致（旧行为），1 = 每只眼睛独立采样
+msgid "VR Parallax Strength"
+msgstr "VR 视差强度"
+
+# [NT-L10N] 汉化补齐
+
+msgid "Copy"
+msgstr "复制"
+
+msgid "Paste"
+msgstr "粘贴"
+
+msgid "Reset"
+msgstr "重置"
+
+msgid "Revert"
+msgstr "还原"
+
+msgid "Copy Name"
+msgstr "复制属性名"
+
+msgid "Apply to parent"
+msgstr "应用到父级"
+
+msgid "From Shader"
+msgstr "跟随着色器"
+
+msgid "Opaque"
+msgstr "不透明"
+
+msgid "Cutout"
+msgstr "镂空"
+
+msgid "Geometry"
+msgstr "几何体（2000）"
+
+msgid "AlphaTest"
+msgstr "镂空队列（2450）"
+
+msgid "Transparent"
+msgstr "半透明（3000）"
+
+msgid "Locked properties cannot be overriden by a child."
+msgstr "被锁定的属性无法被子级覆盖。"
+
+msgid "This property is set and locked by an ancestor."
+msgstr "该属性由父级设置并锁定。"

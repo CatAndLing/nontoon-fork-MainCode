@@ -1,0 +1,25 @@
+# 只跟踪两个 VPM 包 + 生成器；工作区里的其它东西一律不进仓库。
+_notes/
+_verify-proj/
+_e2e-proj/
+_live/
+_audit/
+_refs/
+
+# Unity / .NET 噪声
+Library/
+Temp/
+obj/
+Obj/
+Logs/
+UserSettings/
+Build/
+Builds/
+.vs/
+*.csproj
+*.sln
+*.user
+*.zip
+
+Thumbs.db
+.DS_Store

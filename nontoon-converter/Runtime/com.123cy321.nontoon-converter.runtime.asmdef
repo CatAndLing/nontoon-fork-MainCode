@@ -1,0 +1,14 @@
+{
+    "name": "com.123cy321.nontoon-converter.runtime",
+    "rootNamespace": "NonToonTools",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

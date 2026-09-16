@@ -1,0 +1,13 @@
+{
+  "name": "com.123cy321.nontoon-converter",
+  "version": "0.5.2",
+  "displayName": "NonToon (Fork) Tools",
+  "description": "Tooling companion for NonToon (Fork): (1) the lilToon -> NonToon material converter, which generates NEW materials and never modifies the original lilToon materials, (2) the SelfLight baker, which gives an avatar its own private light with a baked self-shadow map - no realtime Light component, so it does not affect the VRChat performance rank and never lights the world or other players, and (3) the realtime self-shadow rig (PCSS, PC-only) plus ambient colour-temperature detection. 0.5.2 makes Modular Avatar a REQUIRED dependency: every feature that needs an Expression Menu is installed declaratively (MergeAnimator / Parameters / MenuItem / MenuInstaller) and the old fallback that wrote directly into your FX controller, ExpressionParameters and ExpressionsMenu has been removed, so this toolkit never modifies your assets in place. The in-game menu is a submenu (Action Menu > NonToon light & shadow) with four INDEPENDENT controls - light lower limit, light upper limit, shadow strength and a shadow on/off toggle - totalling 25 sync bits, instead of one opaque look wheel. It also adds ambient colour-temperature detection: it reads the scene ambient light (per ambientMode, or the SH probe), fits the correlated colour temperature on the shader's OWN colour-temperature curve (exact round-trip), and says honestly when an ambient tint (green / magenta) simply cannot be expressed as a colour temperature - so your own private light stops looking cold inside a warm map, and the realtime light can follow the ambient hue at runtime. Menu controls are written in the exact shape the VRChat SDK itself produces (RadialPuppet parameters live in subParameters[0]). VRChat's PipelineManager is accessed through reflection, so there is no VRChat SDK dependency and it also works in non-VRChat projects. See Mapping.md, SelfLight.md and the fork repo for details. Package id is historical (it started as the converter) and is kept so existing installs update in place.",
+  "unity": "2022.3",
+  "hideInEditor": false,
+  "vpmDependencies": {
+    "jp.lilxyzw.nontoon": ">=0.2.0",
+    "nadena.dev.modular-avatar": ">=1.10.0"
+  },
+  "repo": "https://catandling.github.io/VPM-nontoon-fork/vpm.json"
+}
