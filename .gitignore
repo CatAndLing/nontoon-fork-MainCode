@@ -34,5 +34,11 @@ Thumbs.db
 *PCSS For VRC*/
 
 # `_notes/` 里已经用目录规则排除了，但门禁脚本会把日志写在**仓库根**，单独收掉。
-# （否则 `git status` 会被几十个 _verify-*.log 淹没，真正要提交的东西反而看不见。）
+# （否则 `git status` 会被几十个 _verify-*.log 淹没，真正要提交的东西反而看不见。
+#   **`git status` 不可信本身就是一类假绿** —— 这才是要收它的真正理由，不是洁癖。）
 _verify-*.log
+*.log
+
+# `_VPM-nontoon-fork/` 是**另一个** git 仓库（只装 VPM 列表与 zip，不含源码），
+# 不是本仓库的内容；留着它会让 `git status` 一直挂一个 `??` 目录。
+_VPM-nontoon-fork/
