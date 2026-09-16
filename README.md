@@ -11,8 +11,8 @@
 
 | 目录 | 包 | 版本 | 说明 |
 |---|---|---|---|
-| `NonToon/` | `jp.lilxyzw.nontoon` "NonToon (Fork)" | 0.3.10 | 上游 `lilxyzw/NonToon` 0.1.3 的 fork。基于 ShaderCore，13 个模块（其中 `Emission` / `SelfLight` / `ShadowColor` 是 fork 新增） |
-| `nontoon-converter/` | `com.123cy321.nontoon-converter` "NonToon (Fork) Tools" | 0.5.2 | lilToon→NonToon 材质转换器、光照控制器与 MA 菜单、烘焙私有光源 |
+| `NonToon/` | `com.catandling.nontoon` "NonToon (Fork)" | 0.3.11 | 上游 `lilxyzw/NonToon` 0.1.3 的 fork。基于 ShaderCore，13 个模块（其中 `Emission` / `SelfLight` / `ShadowColor` 是 fork 新增）。着色器名 `nontoon-fork` / `nontoon-fork-fur` / `nontoon-fork-twopass` |
+| `nontoon-converter/` | `com.catandling.nontoon-converter` "NonToon (Fork) Tools" | 0.5.3 | lilToon→NonToon 材质转换器、光照控制器与 MA 菜单、烘焙私有光源 |
 | `tools/` | — | — | `make-twopass.mjs`：从 `NonToon.scshader` 生成两趟透明变体 `NonToonTwoPass.scshader`（**派生文件，别手改**） |
 
 ## 先读这个
@@ -22,19 +22,40 @@
 
 ## 安装
 
-**未发布到本仓库。** 从 VPM listing 安装（`VPM-nontoon-fork`），或把包目录直接放进 Unity 工程的
-`Packages/` 下。
+**已发布**（2026-09-18 起）。用 VPM 客户端添加本 listing：
+
+```
+https://catandling.github.io/VPM-nontoon-fork/vpm.json
+```
+
+落地页 <https://catandling.github.io/VPM-nontoon-fork/> 上有一键添加按钮。也可以把包目录直接放进
+Unity 工程的 `Packages/` 下。
 
 - Unity 2022.3，**Built-in 渲染管线**（URP 未验证）
-- 依赖 `jp.lilxyzw.shadercore` `^0.1.9`
+- 着色器包依赖 `jp.lilxyzw.shadercore` `^0.1.9`
+- 工具包依赖 `com.catandling.nontoon >=0.3.11` 与 `nadena.dev.modular-avatar >=1.10.0`
+- ⚠️ **实际需要一个 VRChat SDK 工程**：工具包 0.5.2 起把 Modular Avatar 设为**必需**依赖，
+  而 MA 的 `Runtime` asmdef 用 `overrideReferences: true` 显式引用 `VRCSDKBase.dll` /
+  `VRCSDK3A.dll` / `VRC.Dynamics.dll` / `System.Collections.Immutable.dll`
+  （实测依据：MA 包的 asmdef；缺 SDK 时 Unity 以「Scripts have compiler errors」中止）。
+  ⇒ 工具包 `package.json` 里"不依赖 VRCSDK、在非 VRChat 工程也能用"那句描述
+  **自 0.5.2 起已不成立**，待修（见 `_notes/发布记录-0.3.11-0.5.3.md`）。
 
-## 包身份（**发布前必须解决的阻塞点**）
+## 包身份（**已于 2026-09-18 解决**）
 
-本 fork **故意沿用上游的包 id** `jp.lilxyzw.nontoon`，目的是让安装它等同于原地升级官方 NonToon。
-代价是：任何声明 `jp.lilxyzw.nontoon: ^0.1.3` 的第三方包（caret 语义 = `>=0.1.3 <0.2.0`）
-**无法与本 fork 共存**（0.3.x 不满足）。已有一个公开包如此声明。
+本 fork **曾**沿用上游包 id `jp.lilxyzw.nontoon`；现已彻底切分为**自有身份**：
 
-⇒ 在发布前必须二选一：**明确的上游替代策略 + 协调依赖方**，或者**独立的包身份 + 资产/GUID 共存策略**。
+| | 旧（已废弃） | 现在 |
+|---|---|---|
+| 着色器包 | `jp.lilxyzw.nontoon` | `com.catandling.nontoon` @ 0.3.11 |
+| 工具包 | `com.123cy321.nontoon-converter` | `com.catandling.nontoon-converter` @ 0.5.3 |
+| 着色器名 | `NonToon` | `nontoon-fork`（`-fur` / `-twopass`） |
+
+- 用户已确认本 fork **没有需要迁移的老用户** ⇒ 全部全新安装，**不提供迁移路径**。
+- **程序集名与资产 GUID 保留**（实测仍为 `jp.lilxyzw.nontoon` / `com.123cy321.nontoon-converter`），
+  目的是让已有材质的引用不断。**包 id ≠ 程序集名**，别把两者混为一谈。
+- 第三方包若声明上游 `jp.lilxyzw.nontoon: ^0.1.3`，现在会**各自安装、互不覆盖**，
+  但也**不会**作用于本 fork（LightLimit 例外：它按路径含 `nontoon` 扫描 `.scshader`，仍会命中）。
 
 ## 重新生成两趟透明变体
 

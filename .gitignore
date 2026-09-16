@@ -42,3 +42,13 @@ _verify-*.log
 # `_VPM-nontoon-fork/` 是**另一个** git 仓库（只装 VPM 列表与 zip，不含源码），
 # 不是本仓库的内容；留着它会让 `git status` 一直挂一个 `??` 目录。
 _VPM-nontoon-fork/
+
+# 测试床工程（一次性搭起来跑门禁用的，含 Library/ 缓存，不该进版本控制）：
+#   _clean-proj/          —— 2026-09-17 那次**无效测量**用的工程（包目录在编译中被移走）
+#   _clean-proj-outside/  —— 上面那次被移出去的包
+#   _gate-proj/           —— 干净安装门禁（装置 I）的测试床，由 vrc-get + 标准模板搭起
+# ⚠️ 门禁的**脚本与探针本体**要进版本控制（见 _notes/probes/NTCleanInstallProbe.cs 与
+#    _notes/verify-clean-install.sh）；只有这些**可再生的测试床目录**排除。
+_clean-proj/
+_clean-proj-outside/
+_gate-proj/

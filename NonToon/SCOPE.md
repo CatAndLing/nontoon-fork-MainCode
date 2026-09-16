@@ -1,13 +1,18 @@
 # NonToon (Fork) — Support scope and known limitations
 
-> **Status: DEVELOPMENT CANDIDATE — not published.**
-> This file states exactly what this shader package claims, what it does not, and what has not yet
-> been measured. If something is not listed as supported below, treat it as unsupported.
+> **Status: published as `com.catandling.nontoon` 0.3.11 (2026-09-18).**
+> It is still a fork of a 0.1.3-era upstream and several areas remain unmeasured — this file states
+> exactly what the package claims, what it does not, and what has not yet been measured.
+> If something is not listed as supported below, treat it as unsupported.
 
 ## What this is
 
-A fork of `lilxyzw/NonToon` **0.1.3**. It deliberately keeps the **same package id**
-(`com.catandling.nontoon`) so that installing it upgrades the official NonToon in place.
+A fork of `lilxyzw/NonToon` **0.1.3**. It uses its **own package id** (`com.catandling.nontoon`) and
+its own shader names (`nontoon-fork`, `nontoon-fork-fur`, `nontoon-fork-twopass`) — deliberately
+**not** the upstream id and names (`jp.lilxyzw.nontoon`, `NonToon`). Installing this fork therefore
+does **not** upgrade the official NonToon in place: the two now coexist instead of colliding
+(assembly names and asset GUIDs are retained, so existing material references keep working).
+**Remove the old package before installing this one** — otherwise the same GUIDs are imported twice.
 
 **It is not an official upstream release.** Upstream licence and attribution are retained.
 Its display name is marked as a fork.
