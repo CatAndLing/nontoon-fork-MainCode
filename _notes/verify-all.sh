@@ -92,6 +92,12 @@ run() {
   if [ "$fresh" -gt 0 ]; then note="report-ok"; else note="⚠NO-REPORT"; fi
   echo "    装置 $name 退出码 = $rc   本轮新报告 = $fresh  ($note)"
   [ "$fresh" -eq 0 ] && echo "    ⚠️ 这台没有产出任何报告 —— 退出码为 0 也**不能**当作已验证过（探针可能根本没跑起来）"
+  # 把本台产物另存一份到 _notes/reports/<run-id>/ —— 否则下一台启动前会把它清掉，
+  # 导致"结果文件里有 report-ok，但报告明细再也翻不到"。
+  mkdir -p "$ROOT/_notes/reports/$RUNID"
+  for f in "$P"/*.txt; do
+    [ -e "$f" ] && cp "$f" "$ROOT/_notes/reports/$RUNID/$name-$(basename "$f")"
+  done
   echo "$name $rc $note" >> "$RESULT"
 }
 
