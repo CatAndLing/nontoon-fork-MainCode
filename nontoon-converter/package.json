@@ -7,7 +7,8 @@
   "hideInEditor": false,
   "vpmDependencies": {
     "com.catandling.nontoon": ">=0.3.11",
-    "nadena.dev.modular-avatar": ">=1.10.0"
+    "nadena.dev.modular-avatar": ">=1.10.0",
+    "nadena.dev.ndmf": ">=1.8.0 <2.0.0-a"
   },
   "repo": "https://catandling.github.io/VPM-nontoon-fork/vpm.json"
 }

@@ -20,7 +20,17 @@ if (proxy && !process.env.NODE_USE_ENV_PROXY) {
 
 const PAGE = 'https://catandling.github.io/VPM-nontoon-fork/';
 const LISTING = 'https://catandling.github.io/VPM-nontoon-fork/vpm.json';
-const README_RAW = 'https://raw.githubusercontent.com/CatAndLing/VPM-nontoon-fork/main/README.md';
+// ⚠️ 手册**不能**用 raw.githubusercontent 读：它有 CDN 缓存，且加 `?cb=` 查询串**绕不过**
+//（2026-09-18 实测：推完手册后 50 秒仍取到旧内容 ⇒ 门禁会拿**旧内容**做判断，
+// 既是假红也是**假绿**）。改走 GitHub API 的 raw 媒体类型 —— 实测拿到的是最新提交。
+const README_API = 'https://api.github.com/repos/CatAndLing/VPM-nontoon-fork/contents/README.md';
+async function getReadme() {
+  const res = await fetch(README_API, {
+    headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/vnd.github.raw' },
+    redirect: 'follow',
+  });
+  return { status: res.status, body: await res.text() };
+}
 const NEEDLE = 'href="vcc://vpm/addRepo?url=https://catandling.github.io/VPM-nontoon-fork/vpm.json"';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -90,6 +100,16 @@ else {
   }
   if (m.body.includes('MANUAL.md')) bad('README 里还指向已删除的 MANUAL.md');
   else console.log('    没有指向已删除的 MANUAL.md: ✓');
+
+  // 手册**不得出现状态符号**（用户 2026-09-18 要求）。
+  // 为什么值得单独一道闸：本手册早有决定 `a4f303b README 重写：…去除所有状态符号与圈码`，
+  // 而 2026-09-18 的重写里我又把 ⬜/✅/🔒 塞了回去（基线实测这三种符号本来就是 0 个）。
+  // ⇒ 这类"风格回归"靠记性必然复发，靠命令才拦得住。
+  console.log('\n--- 手册不得出现状态符号 ---');
+  const BANNED = ['⬜', '✅', '❌', '🔒', '🔄', '🟡'];
+  const hit = BANNED.filter((s) => m.body.includes(s));
+  if (hit.length) bad(`README 里出现了状态符号：${hit.join(' ')}（本手册的既有风格是纯文字；警告用 ⚠️／⛔ 是原有的，不在禁止之列）`);
+  else console.log('  未出现状态符号（⬜ ✅ ❌ 🔒 🔄 🟡）: ✓');
 }
 
 console.log('\n--- listing（身份已切分为自有 id） ---');

@@ -2,7 +2,8 @@
     "name": "com.123cy321.nontoon-converter",
     "rootNamespace": "LilToonToNonToonConverter",
     "references": [
-        "com.123cy321.nontoon-converter.runtime"
+        "com.123cy321.nontoon-converter.runtime",
+        "nadena.dev.ndmf"
     ],
     "includePlatforms": [
         "Editor"

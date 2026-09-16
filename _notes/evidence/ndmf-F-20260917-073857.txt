@@ -1,0 +1,110 @@
+== 运行信息 ==
+时间  = 2026-09-17 07:39:12
+工程  = C:\Users\15827\Desktop\dsh\unity\_verify-proj
+Unity = 2022.3.22f1
+
+== A. AAO / NDMF 环境 ==
+  ·  VRChatPlatform 来自 nadena.dev.ndmf.vrchat（internal）
+  ·  已加载的 ndmf 程序集：nadena.dev.ndmf.runtime, nadena.dev.ndmf, nadena.dev.ndmf.vrchat
+  ✅ 找到 AAO 的 TraceAndOptimize 组件 → com.anatawa12.avatar-optimizer.runtime
+  ✅ 找到 AAO 的 MergeSkinnedMesh 组件
+  ✅ 找到 NDMF 的 AvatarProcessor
+  ✅ 找到 NDMF 的 VRChatPlatform 类型
+  ✅ 拿到平台实例 → nadena.dev.ndmf.vrchat.VRChatPlatform
+  ✅ 找到 AAO 的 ShaderInformation API（E9 相关）
+
+== B. 搭最小 avatar（含 ③ 插件真实产物）==
+  ✅ 找到 NonToon 着色器
+  ·  没找到 VRCPipelineManager（com.vrchat.base 里的类型）
+  ✅ 找到 NTVrcParameterBuilder
+  ✅ ③ 产物生成无错误
+  ✅ 生成曲线剪辑：NT_Light_LightMinLimit_低.anim（_LightMinLimit = 0.05）、NT_Light_LightMinLimit_高.anim（0.6），绑定 2 个 Renderer 的 material._LightMinLimit
+  ✅ 新建独立 FX AnimatorController：Assets/NonToonLightAdjuster/NT_Light_NonToonFX.controller（由 Modular Avatar 合并进 FX 层）
+  ✅ Animator 参数 +Float NT_Light
+  ✅ 新增 Animator 层「NonToon LightMinLimit」：BlendTree 按 NT_Light 在两条曲线间混合（0 → 0.05，1 → 0.6）
+  ✅ 独立模式：只生成资产，avatar 的动画层 / 参数 / 菜单交给 Modular Avatar 在构建期合并（**你的 FX 控制器 / ExpressionParameters / ExpressionsMenu 不会被改动**）
+  ✅ 拿到生成的 FX 控制器
+  ✅ ③ 产物按当前窗口路径挂上真实 MA 组件
+  ·  specialAnimationLayers 的枚举值：Base, Deprecated0, Additive, Gesture, Action, FX, Sitting, TPose, IKPose
+  ·  已自建 specialAnimationLayers（3 条：Sitting, TPose, IKPose）
+  ·  已自建 baseAnimationLayers（5 条，FX=NT_Light_NonToonFX）
+  ✅ 已把 FX 控制器写进 VRCAvatarDescriptor 的 FX 层
+  ✅ 【NDMF】工具包插件已加载
+
+== C. 处理前基线 ==
+  ·  FX 层 3 层（含「NonToon LightMinLimit」=True）
+  ·  参数 NT_Light = True｜低剪辑绑定 2 条
+  ·  环境光/材质：NonToon 材质 _LightMinLimit=0，贴图=有
+
+  处理前快照：
+    root = NTAAOAvatar，子物体 9 个
+    renderers = 5： Body(MeshRenderer), Accessory(MeshRenderer), CustomQueue(MeshRenderer), CutoutQueue(MeshRenderer), UnchangedQueue(MeshRenderer)
+    FX 层 = Base Layer / NonToon LightMinLimit / QueueSwap
+    Expression Parameters 条数 = 0
+    材质 = NTAaoMat tex=True / NTAaoMat2
+    剪辑 = NT_Light_LightMinLimit_低 绑定 2 条
+
+== D. 跑 NDMF + AAO 构建（AvatarProcessor.ProcessAvatar）==
+  ·  ProcessAvatar 重载：(GameObject) / (GameObject,INDMFPlatformProvider)
+  ✅ 找到可用的 ProcessAvatar 重载
+  ✅ 构建调用返回
+  构建期间产生 4 条 warning/error：
+    Warning | [NonToon NDMF LEGACY_FX] FX 中有旧 NonToon 层/NT_Light。不能仅凭名称确认归属，未自动删除；请检查并迁移为 MA 声明。
+    Log | [NonToon NDMF] Replay complete: properties=1, lights=1, authoringRemoved=2
+    Log | [NonToon NDMF] Queue pass complete: materials=6, queues=4
+    Warning | [NDMF] Error Reported: 部分纹理未启用 Mip Streaming。
+
+以下资源未启用 Mip Streaming 设置，但在 VRChat 中这些资源必须启用该设置。你可以在受影响资源上手动启用“Mip Streaming”，或点击“自动修复”来进行修复。
+  ✅ 拿到处理后的 avatar（BuildContext.AvatarRootObject）
+  ✅ 【NDMF】真实构建执行了 Replay pass
+  ✅ 【NDMF】真实构建执行了 Queue pass
+  ✅ 【NDMF】构建无 error/exception
+  ✅ 【NDMF】旧 FX 残留明确报警
+  ✅ 【NDMF】产物 NTAaoMat queue=3000 → 3000
+  ✅ 【NDMF】产物 NTAaoMat2 queue=2000 → 2000
+  ✅ 【NDMF】Opaque rawQueue=-1，固定亮度 0.12 → 0.73
+  ✅ 【NDMF】产物 CustomQueue queue=3005 → 3005
+  ✅ 【NDMF】产物 CutoutQueue queue=2450 → 2450
+  ✅ 【NDMF】产物 UnchangedQueue queue=3000 → 3000
+  ✅ 【NDMF】已消费的 authoring 组件清理完成
+  ✅ 【NDMF】构建灯光 intensity 0.11 → 1.23
+  ✅ 【NDMF】原始 avatar / 材质内存值未被构建改写
+  ✅ 【NDMF】源材质 / FX / 剪辑逐字节未改
+  ✅ 【NDMF】动画替换材质产物 queue=3000，源 queue=2000 → matches=2
+  ✅ 【NDMF】产物 NTAaoMat queue=3000 → 3000
+  ✅ 【NDMF】产物 NTAaoMat2 queue=2000 → 2000
+  ✅ 【NDMF】Opaque rawQueue=-1，固定亮度 0.12 → 0.73
+  ✅ 【NDMF】产物 CustomQueue queue=3005 → 3005
+  ✅ 【NDMF】产物 CutoutQueue queue=2450 → 2450
+  ✅ 【NDMF】产物 UnchangedQueue queue=3000 → 3000
+  ✅ 【NDMF】重复重放材质引用及序列化字段不变（幂等）
+  ✅ 【NDMF】第二次构建源资产仍逐字节未改
+
+== E. AAO 构建后的结果 ==
+  ✅ 【Q1】构建后的 FX 必须存在，不能跳过后续断言
+  ·  处理后 FX 控制器：NT_Light_NonToonFX
+  ✅ 【Q1】我们的动画层在 AAO 构建后仍然存在 → 层：Base Layer, NonToon LightMinLimit, QueueSwap, NonToon LightMinLimit, QueueSwap
+  ✅ 【Q1】Float 参数 NT_Light 仍然存在 → 2 个参数
+  ✅ 【Q1】BlendTree 仍由 NT_Light 驱动
+  ✅ 【Q1】构建后的材质剪辑必须存在
+  ✅ 【Q1】材质属性曲线仍在（NT_Light_LightMinLimit_低） → material._LightMinLimit @ Body
+  ✅ 【Q1】至少有一条绑定能解析到处理后 avatar 里的对象 → 2/2 条可解析（路径会被 AAO 按合并结果改写）
+  ·      绑定：material._LightMinLimit → Body
+  ·      绑定：material._LightMinLimit → Accessory
+  ✅ 【Q1】构建后的 ExpressionParameters 必须存在
+  ✅ 【Q1】Expression Parameter NT_Light 仍然存在
+  ✅ 【Q2】NonToon 材质资产没被删掉
+  ✅ 【Q2】材质的 _BaseTexture 引用还在（AAO 没误删 NonToon 用的贴图）
+  ·        _LightMinLimit 现在 = 0
+  ✅ 【Q2】贴图资产文件还在
+  ·       处理后 renderer 上的 NonToon 材质：NTAaoMat (NonToon build)
+
+  处理后快照：
+    root = NTAAOAvatar(Clone)，子物体 7 个
+    renderers = 5： Body(MeshRenderer), Accessory(MeshRenderer), CustomQueue(MeshRenderer), CutoutQueue(MeshRenderer), UnchangedQueue(MeshRenderer)
+    FX 层 = Base Layer / NonToon LightMinLimit / QueueSwap / NonToon LightMinLimit / QueueSwap
+    Expression Parameters 条数 = 4
+    材质 = NTAaoMat tex=True / NTAaoMat
+    剪辑 = NT_Light_LightMinLimit_低 绑定 2 条
+
+==== 全部通过（51 项）====

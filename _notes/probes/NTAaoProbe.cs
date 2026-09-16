@@ -4,7 +4,7 @@
 //   Q2（E9）AAO 对未注册 ShaderInformation 的着色器（NonToon）是否真的走"保守路径"——
 //           也就是**不会**乱删贴图 / 乱改材质属性？
 //
-// 依赖：_verify-proj/Packages 下有 com.anatawa12.avatar-optimizer(1.9.16) + nadena.dev.ndmf(1.14.3)
+// 依赖：_verify-proj/Packages 下有 MA + AAO + NDMF（本批验证 1.18.7 / 1.9.19 / 1.14.8）
 //       + com.unity.burst + com.unity.nuget.newtonsoft-json（从用户工程拷来，见交接文档）
 using System;
 using System.Collections;
@@ -24,7 +24,6 @@ public static class NTAaoProbe
     const string Dir = "Assets/NTAaoProbe";
     static readonly StringBuilder Sb = new StringBuilder();
     static int Fail, Pass;
-    static bool Skipped;   // 环境不具备（缺 AAO/NDMF）时为 true ⇒ 不计失败、退出码 0
     static readonly List<string> Logs = new List<string>();
 
     static void L(string s) { Sb.AppendLine(s); Debug.Log("[NTAO] " + s); }
@@ -73,7 +72,7 @@ public static class NTAaoProbe
         try { if (File.Exists(OUT)) File.Delete(OUT); } catch { }
         Application.logMessageReceived += (m, s, t) =>
         {
-            if (t == LogType.Warning || t == LogType.Error || t == LogType.Exception) Logs.Add(t + " | " + m);
+            if (t == LogType.Warning || t == LogType.Error || t == LogType.Exception || m.StartsWith("[NonToon NDMF]")) Logs.Add(t + " | " + m);
         };
 
         L("== 运行信息 ==");
@@ -86,11 +85,9 @@ public static class NTAaoProbe
         catch (Exception e) { Bad("探针异常：" + e); }
 
         L("");
-        if (Skipped) L("==== 已跳过（环境不具备，不计失败）====");
-        else L(Fail == 0 ? "==== 全部通过（" + Pass + " 项）====" : "==== 有 " + Fail + " 项不符（通过 " + Pass + "）====");
+        L(Fail == 0 ? "==== 全部通过（" + Pass + " 项）====" : "==== 有 " + Fail + " 项不符（通过 " + Pass + "）====");
         File.WriteAllText(OUT, Sb.ToString());
-        Debug.Log("[NTAaoProbe] done -> " + OUT + " (fail=" + Fail + ", skipped=" + Skipped + ")");
-        // 跳过 ⇒ 退出码 0（环境能力探测，不是产品缺陷）
+        Debug.Log("[NTAaoProbe] done -> " + OUT + " (fail=" + Fail + ")");
         EditorApplication.Exit(Fail == 0 ? 0 : 1);
     }
 
@@ -130,20 +127,10 @@ public static class NTAaoProbe
             AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetName().Name).Where(n => n.Contains("ndmf")).ToArray()));
         var siType = T("Anatawa12.AvatarOptimizer.API.ShaderInformation");
         var siRegType = T("Anatawa12.AvatarOptimizer.API.ShaderInformationRegistry");
-        // ⛔ 环境不具备 ⇒ **优雅跳过**（不算失败，更不能崩）。**必须放在下面那些 Check 之前** ——
-        //    否则缺失时 Check 会先 `Fail++`，跳过也救不回退出码（第一版就是这么写错的）。
-        //    本探针需要工程里装 **AAO**（`com.anatawa12.avatar-optimizer`）+ **NDMF**，
-        //    而发版门禁用的 `_verify-proj` 里**没有**这两个包 ⇒ 它在这里天生跑不了。
-        //    这属于**环境能力探测**，与 `NTGpuProbe`（批处理下 RT 回读全黑、必然失败）同类，
-        //    **不构成机器可判的产品正确性证据**，因此不算失败、退出码 0。
-        //    要真跑它：在一个装了 AAO + NDMF 的工程里执行。
+        // F is now a required real-build check. Missing dependencies must fail closed.
         if (aaoType == null || procType == null)
         {
-            Skipped = true;
-            L("");
-            L("==== 跳过（环境不具备）====");
-            L("  需要 AAO + NDMF；当前工程没装 ⇒ 这台装置在这里无法验证。");
-            L("  这是环境能力探测，不是产品正确性验证；要真跑请在装了 AAO + NDMF 的工程里执行。");
+            Bad("本批 F 必须跑真实 AAO/NDMF 构建：缺依赖不能作为通过证据");
             return;
         }
 
@@ -174,12 +161,14 @@ public static class NTAaoProbe
         var matPath = Dir + "/NTAaoMat.mat";
         if (File.Exists(matPath)) AssetDatabase.DeleteAsset(matPath);
         var mat = new Material(shader);
+        mat.name = "NTAaoMat";
         mat.SetTexture("_BaseTexture", texAsset);
         mat.SetFloat("_LightMinLimit", 0f);
         AssetDatabase.CreateAsset(mat, matPath);
         var mat2Path = Dir + "/NTAaoMat2.mat";
         if (File.Exists(mat2Path)) AssetDatabase.DeleteAsset(mat2Path);
         var mat2 = new Material(shader);
+        mat2.name = "NTAaoMat2";
         mat2.SetTexture("_BaseTexture", texAsset);
         AssetDatabase.CreateAsset(mat2, mat2Path);
 
@@ -216,7 +205,7 @@ public static class NTAaoProbe
             res = build.Invoke(null, new object[]
             {
                 root, new List<Renderer> { body.GetComponent<MeshRenderer>(), accessory.GetComponent<MeshRenderer>() },
-                "NT_Light", 0.05f, 0.6f, true, true, "Assets/NonToonLightAdjuster", "_LightMinLimit", false
+                "NT_Light", 0.05f, 0.6f, "Assets/NonToonLightAdjuster", "_LightMinLimit"
             });
         }
         catch (Exception e) { Bad("生成 ③ 产物失败：" + (e.InnerException ?? e).Message); }
@@ -227,11 +216,53 @@ public static class NTAaoProbe
             L((res.GetType().GetMethod("Summary")?.Invoke(res, null) as string ?? "").TrimEnd());
         }
 
-        // 把生成的 FX 控制器挂到 descriptor 的 FX 层（NDMF/AAO 才会处理它）
-        var fx = AssetDatabase.LoadAssetAtPath<AnimatorController>("Assets/NonToonLightAdjuster/NonToonLightAdjusterFX.controller");
+        // 同时保留旧版直接 FX 挂载作为残留夹具，并用当前 MA Attach 路径安装。
+        // 因此输出可能有同名层；这是检查旧残留报警/不擅自删除的有意输入。
+        // Use THIS invocation's result; the former fixed path can contain stale assets.
+        var fx = GetField(res, "Controller") as AnimatorController;
         Check(fx != null, "拿到生成的 FX 控制器");
+        if (fx == null) return;
+        var attach = T("NonToonTools.NTModularAvatarBridge").GetMethod("Attach", BindingFlags.Static | BindingFlags.NonPublic)
+            .Invoke(null, new object[] { root, fx, "NT_Light", true, 1f, "亮度", true });
+        Check((bool)attach.GetType().GetProperty("Ok").GetValue(attach), "③ 产物按当前窗口路径挂上真实 MA 组件");
         bool assigned = AssignFxLayer(desc, descType, fx);
         Check(assigned, "已把 FX 控制器写进 VRCAvatarDescriptor 的 FX 层");
+
+        // F owns the real build: deliberately stale inputs must change in the BUILD output only.
+        var pluginType = T("NonToonTools.NTBuildPlugin");
+        Check(pluginType != null, "【NDMF】工具包插件已加载");
+        mat.SetInteger("_RenderingMode", 2); mat.renderQueue = 2000;
+        mat2.SetInteger("_RenderingMode", 0); mat2.renderQueue = 3000;
+        mat2.SetFloat("_LightMaxLimit", 0.12f);
+        var adjustType = T("NonToonTools.NTLightAdjust");
+        var adjust = accessory.AddComponent(adjustType);
+        SetField(adjust, "mode", Enum.ToObject(adjustType.GetField("mode").FieldType, 0));
+        SetField(adjust, "propertyName", "_LightMaxLimit");
+        SetField(adjust, "fixedValue", 0.73f);
+        var lightGo = new GameObject("BuildLight"); lightGo.transform.SetParent(root.transform, false);
+        var light = lightGo.AddComponent<Light>(); light.intensity = 0.11f;
+        var lightSettings = lightGo.AddComponent(T("NonToonTools.NTAvatarLight"));
+        SetField(lightSettings, "target", light); SetField(lightSettings, "intensity", 1.23f);
+        var custom = AddQueueFixture(root, shader, "CustomQueue", 2, 3005);
+        var cutout = AddQueueFixture(root, shader, "CutoutQueue", 1, 2000);
+        var unchanged = AddQueueFixture(root, shader, "UnchangedQueue", 2, 3000);
+        // A material which appears ONLY in an animation must also be fixed through NDMF's virtual clips.
+        var swap = new Material(shader) { name = "AnimatedQueue", renderQueue = 2000 };
+        swap.SetInteger("_RenderingMode", 2);
+        if (File.Exists(Dir + "/AnimatedQueue.mat")) AssetDatabase.DeleteAsset(Dir + "/AnimatedQueue.mat");
+        AssetDatabase.CreateAsset(swap, Dir + "/AnimatedQueue.mat");
+        var swapClip = new AnimationClip { name = "QueueSwap" };
+        AnimationUtility.SetObjectReferenceCurve(swapClip,
+            EditorCurveBinding.PPtrCurve("Body", typeof(MeshRenderer), "m_Materials.Array.data[0]"),
+            new[] { new ObjectReferenceKeyframe { time = 0, value = mat }, new ObjectReferenceKeyframe { time = 1, value = swap } });
+        if (File.Exists(Dir + "/QueueSwap.anim")) AssetDatabase.DeleteAsset(Dir + "/QueueSwap.anim");
+        AssetDatabase.CreateAsset(swapClip, Dir + "/QueueSwap.anim");
+        fx.AddLayer("QueueSwap");
+        var swapLayer = fx.layers.Last(); swapLayer.stateMachine.AddState("Swap").motion = swapClip;
+        var fxLayers = fx.layers; fxLayers[fxLayers.Length - 1].defaultWeight = 1; fx.layers = fxLayers;
+        AssetDatabase.SaveAssets();
+        var sourcePaths = new[] { matPath, mat2Path, Dir + "/AnimatedQueue.mat", Dir + "/QueueSwap.anim", AssetDatabase.GetAssetPath(fx) };
+        var sourceBytes = sourcePaths.ToDictionary(p => p, p => File.ReadAllBytes(p));
 
         // ---------------- C. 处理前基线 ----------------
         L("");
@@ -262,11 +293,12 @@ public static class NTAaoProbe
 
         int logMark = Logs.Count;
         object ctx = null;
+        var buildRoot = UnityEngine.Object.Instantiate(root);
         try
         {
             ctx = process.GetParameters().Length == 2
-                ? process.Invoke(null, new[] { root, platInst })
-                : process.Invoke(null, new object[] { root });
+                ? process.Invoke(null, new[] { buildRoot, platInst })
+                : process.Invoke(null, new object[] { buildRoot });
             Ok("构建调用返回");
         }
         catch (Exception e) { Bad("构建抛异常：" + (e.InnerException ?? e).Message); }
@@ -278,11 +310,46 @@ public static class NTAaoProbe
         Check(processed != null, "拿到处理后的 avatar（BuildContext.AvatarRootObject）");
         if (processed == null) return;
 
+        Check(newLogs.Any(s => s.StartsWith("Log | [NonToon NDMF] Replay complete:")), "【NDMF】真实构建执行了 Replay pass");
+        Check(newLogs.Any(s => s.StartsWith("Log | [NonToon NDMF] Queue pass complete:")), "【NDMF】真实构建执行了 Queue pass");
+        Check(!newLogs.Any(s => s.StartsWith("Error |") || s.StartsWith("Exception |")), "【NDMF】构建无 error/exception");
+        Check(newLogs.Any(s => s.StartsWith("Warning | [NonToon NDMF LEGACY_FX]")), "【NDMF】旧 FX 残留明确报警");
+        CheckBuildMaterials(processed);
+        Check(processed.GetComponentsInChildren(adjustType, true).Length == 0 &&
+            processed.GetComponentsInChildren(T("NonToonTools.NTAvatarLight"), true).Length == 0, "【NDMF】已消费的 authoring 组件清理完成");
+        Check(Mathf.Abs(processed.GetComponentsInChildren<Light>(true).Single().intensity - 1.23f) < 1e-6f,
+            "【NDMF】构建灯光 intensity 0.11 → 1.23");
+        Check(mat.renderQueue == 2000 && mat2.renderQueue == 3000 && swap.renderQueue == 2000 &&
+            Mathf.Abs(mat2.GetFloat("_LightMaxLimit") - 0.12f) < 1e-6f && light.intensity == 0.11f,
+            "【NDMF】原始 avatar / 材质内存值未被构建改写");
+        Check(sourceBytes.All(p => File.ReadAllBytes(p.Key).SequenceEqual(p.Value)), "【NDMF】源材质 / FX / 剪辑逐字节未改");
+        var buildFx = GetFxController(processed.GetComponent(descType), descType);
+        var builtSwaps = buildFx.animationClips.SelectMany(c => AnimationUtility.GetObjectReferenceCurveBindings(c)
+            .SelectMany(b => AnimationUtility.GetObjectReferenceCurve(c, b))).Select(k => k.value).OfType<Material>()
+            .Where(m => m.name.StartsWith("AnimatedQueue")).ToArray();
+        Check(builtSwaps.Length > 0 && builtSwaps.All(m => m.renderQueue == 3000 && m != swap),
+            "【NDMF】动画替换材质产物 queue=3000，源 queue=2000", "matches=" + builtSwaps.Length);
+        // Build a second clone of the same source, then replay on the completed clone.
+        // This checks repeat builds AND idempotence without changing any existing assertion.
+        var secondRoot = UnityEngine.Object.Instantiate(root);
+        secondRoot.name = "NTAAOAvatarRepeat"; // NDMF's temporary asset directory is keyed by avatar name.
+        var ctx2 = process.GetParameters().Length == 2 ? process.Invoke(null, new[] { secondRoot, platInst }) : process.Invoke(null, new object[] { secondRoot });
+        var second = (GameObject)ctx2.GetType().GetProperty("AvatarRootObject").GetValue(ctx2);
+        CheckBuildMaterials(second);
+        var beforeReplay = second.GetComponentsInChildren<Renderer>(true).SelectMany(r => r.sharedMaterials).ToArray();
+        var replayValues = beforeReplay.Select(m => EditorJsonUtility.ToJson(m)).ToArray();
+        pluginType.GetMethod("Replay", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new[] { ctx2 });
+        var afterReplay = second.GetComponentsInChildren<Renderer>(true).SelectMany(r => r.sharedMaterials).ToArray();
+        Check(beforeReplay.SequenceEqual(afterReplay) && replayValues.SequenceEqual(afterReplay.Select(m => EditorJsonUtility.ToJson(m))),
+            "【NDMF】重复重放材质引用及序列化字段不变（幂等）");
+        Check(sourceBytes.All(p => File.ReadAllBytes(p.Key).SequenceEqual(p.Value)), "【NDMF】第二次构建源资产仍逐字节未改");
+
         // ---------------- E. 处理后检查 ----------------
         L("");
         L("== E. AAO 构建后的结果 ==");
         var pDesc = processed.GetComponentInChildren(descType, true);
         var pFx = pDesc == null ? null : GetFxController(pDesc, descType);
+        Check(pFx != null, "【Q1】构建后的 FX 必须存在，不能跳过后续断言");
         Info("处理后 FX 控制器：" + (pFx == null ? "❌ 没了" : pFx.name));
         if (pFx != null)
         {
@@ -305,6 +372,7 @@ public static class NTAaoProbe
 
         // 剪辑绑定是否仍指向存在的对象
         var pClip = FindClipInController(pFx);
+        Check(pClip != null, "【Q1】构建后的材质剪辑必须存在");
         if (pClip != null)
         {
             var binds = AnimationUtility.GetCurveBindings(pClip).Where(b => b.propertyName.StartsWith("material.")).ToArray();
@@ -320,6 +388,7 @@ public static class NTAaoProbe
 
         // Expression 参数
         var pPs = GetField(pDesc, "expressionParameters");
+        Check(pPs != null, "【Q1】构建后的 ExpressionParameters 必须存在");
         if (pPs != null)
         {
             var arr = pPs.GetType().GetField("parameters")?.GetValue(pPs) as Array;
@@ -350,6 +419,31 @@ public static class NTAaoProbe
     }
 
     // ---------------------------------------------------------------- 工具
+    static Material AddQueueFixture(GameObject root, Shader shader, string name, int mode, int queue)
+    {
+        var go = GameObject.CreatePrimitive(PrimitiveType.Cube); go.name = name;
+        go.transform.SetParent(root.transform, false);
+        UnityEngine.Object.DestroyImmediate(go.GetComponent<Collider>());
+        var material = new Material(shader) { name = name, renderQueue = queue };
+        material.SetInteger("_RenderingMode", mode);
+        go.GetComponent<Renderer>().sharedMaterial = material;
+        return material;
+    }
+
+    static void CheckBuildMaterials(GameObject root)
+    {
+        var materials = root.GetComponentsInChildren<Renderer>(true).SelectMany(r => r.sharedMaterials).Where(m => m != null).ToArray();
+        foreach (var pair in new[] { ("NTAaoMat", 3000), ("NTAaoMat2", 2000), ("CustomQueue", 3005), ("CutoutQueue", 2450), ("UnchangedQueue", 3000) })
+        {
+            var matches = materials.Where(m => m.name == pair.Item1 || m.name.StartsWith(pair.Item1 + " (")).ToArray();
+            Check(matches.Length > 0 && matches.All(m => m.renderQueue == pair.Item2), "【NDMF】产物 " + pair.Item1 + " queue=" + pair.Item2,
+                string.Join(",", matches.Select(m => m.renderQueue.ToString())));
+            if (pair.Item1 == "NTAaoMat2")
+                Check(matches.Length > 0 && matches.All(m => new SerializedObject(m).FindProperty("m_CustomRenderQueue").intValue == -1 && Mathf.Abs(m.GetFloat("_LightMaxLimit") - 0.73f) < 1e-6f),
+                    "【NDMF】Opaque rawQueue=-1，固定亮度 0.12 → 0.73");
+        }
+    }
+
     static bool AssignFxLayer(Component desc, Type descType, AnimatorController ctrl)
     {
         try
