@@ -70,7 +70,7 @@ else console.log('  没有过时的「请手动切语言」提示: ✓');
 
 console.log('\n--- 用户手册（已并入 README）---');
 if (html.includes('#readme')) console.log('  落地页有 README（用户手册）入口: ✓'); else bad('落地页没有手册入口');
-const m = await get(README_RAW);
+const m = await getReadme();
 if (m.status !== 200) bad(`README 线上打不开：HTTP ${m.status}`);
 else {
   console.log(`  README 可访问 ✓ (${m.body.length} 字节)`);
