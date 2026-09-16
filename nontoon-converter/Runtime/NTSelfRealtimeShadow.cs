@@ -258,7 +258,7 @@ namespace NonToon
                 foreach (var m in r.sharedMaterials)
                 {
                     if (m == null || m.shader == null) continue;
-                    if (m.shader.name != "NonToon" && m.shader.name != "NonToonFur") continue;
+                    if (m.shader.name != "nontoon-fork" && m.shader.name != "nontoon-fork-fur") continue;
                     if (seen.Add(m)) _targets.Add(m);
                 }
             }
@@ -269,7 +269,7 @@ namespace NonToon
                 foreach (var m in r.sharedMaterials)
                 {
                     if (m == null || m.shader == null) continue;
-                    if (m.shader.name != "NonToon" && m.shader.name != "NonToonFur") continue;
+                    if (m.shader.name != "nontoon-fork" && m.shader.name != "nontoon-fork-fur") continue;
                     if (seen.Add(m)) _targets.Add(m);
                 }
             }

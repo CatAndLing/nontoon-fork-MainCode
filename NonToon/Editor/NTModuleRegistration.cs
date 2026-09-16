@@ -34,12 +34,13 @@ namespace jp.lilxyzw.nontoon
             "jp.lilxyzw.nontoon.selflight",
         };
 
-        private static readonly string[] TargetShaders = { "NonToon", "NonToonFur" };
+        private static readonly string[] TargetShaders = { "nontoon-fork", "nontoon-fork-fur", "nontoon-fork-twopass" };
 
         private static readonly string[] ShaderAssetPaths =
         {
             "Packages/com.catandling.nontoon/Shaders/NonToon.scshader",
             "Packages/com.catandling.nontoon/Shaders/NonToonFur.scshader",
+            "Packages/com.catandling.nontoon/Shaders/NonToonTwoPass.scshader",
         };
 
         private static readonly Regex REG_SHADERNAME = new(@"^\s*-\s*shadername:\s*(\S+)\s*$");
@@ -61,6 +62,7 @@ namespace jp.lilxyzw.nontoon
 
         private static void Run(bool verbose)
         {
+            NTShaderNameCompatibility.EnsureSupported();
             try
             {
                 var path = SettingsPath;

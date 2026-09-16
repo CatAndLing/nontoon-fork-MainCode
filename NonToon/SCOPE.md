@@ -25,7 +25,7 @@ Its display name is marked as a fork.
 ## Supported material modes
 
 - **Opaque**, **Cutout**, **Transparent**. Two-pass transparency is available as the generated
-  variant `NonToonTwoPass` (`tools/make-twopass.mjs` regenerates it; regenerating must produce no diff).
+  variant `nontoon-fork-twopass` (`tools/make-twopass.mjs` regenerates it; regenerating must produce no diff).
 - Shading features represented: upstream **Shade gradient ramp** (the default shading path),
   lilToon-compatible **light min/max limits**, **Emission**, **MatCaps**, **RimLight**, **RimShade**,
   **HairSpecular**, **Specular**, **Details** (up to 4 normal/detail slots), **DistanceFade**,
@@ -35,7 +35,7 @@ Its display name is marked as a fork.
 
 | Feature | Status |
 |---|---|
-| **Fur** (`NonToonFur`) | Asset identity preserved. **Not validated on Radeon** — upstream issue "Fur expands unexpectedly on Radeon" is unfixed. |
+| **Fur** (`nontoon-fork-fur`) | Asset identity preserved. **Not validated on Radeon** — upstream issue "Fur expands unexpectedly on Radeon" is unfixed. |
 | **MatCap VR stereo parallax** | Not validated against a real stereo rendering path in this candidate. |
 | **Two-pass transparency** | Correctness verified numerically on one asset (effective-transmittance measurement). **Not** verified across a broad material matrix. |
 | **SelfLight realtime mode / companion rig** | The runtime rig lives in the **tools package** and is **not part of this candidate**. |

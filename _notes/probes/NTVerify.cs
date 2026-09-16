@@ -18,7 +18,8 @@ public static class NTVerify
     {
         var sh = Shader.Find(name);
         if (sh != null) return sh;
-        AssetDatabase.ImportAsset("Packages/com.catandling.nontoon/Shaders/" + name + ".scshader",
+        var fileName = name == "nontoon-fork" ? "NonToon" : "NonToonFur";
+        AssetDatabase.ImportAsset("Packages/com.catandling.nontoon/Shaders/" + fileName + ".scshader",
             ImportAssetOptions.ForceUpdate);
         return Shader.Find(name);
     }
@@ -27,7 +28,7 @@ public static class NTVerify
     {
         try { if (File.Exists(Out)) File.Delete(Out); } catch { }
         var sb = new StringBuilder();
-        string[] shaders = { "NonToon", "NonToonFur" };
+        string[] shaders = { "nontoon-fork", "nontoon-fork-fur" };
         string[] keys = { "Emission", "Specular", "F0", "Light", "Shadow", "Outline", "Boost", "Parallax", "Direction", "Nearer", "Enable" };
 
         sb.AppendLine("== 运行信息 ==");

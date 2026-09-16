@@ -58,7 +58,7 @@ namespace NonToonTools
 
         internal static bool IsNonToonMaterial(Material m)
         {
-            return m != null && m.shader != null && m.shader.name.StartsWith("NonToon");
+            return m != null && m.shader != null && m.shader.name.StartsWith("nontoon-fork");
         }
 
         [MenuItem("Tools/NonToon/⑦ 修复渲染队列（透明排序）", false, 57)]

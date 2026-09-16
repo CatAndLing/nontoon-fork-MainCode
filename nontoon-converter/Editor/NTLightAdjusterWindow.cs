@@ -604,7 +604,7 @@ namespace NonToonTools
                 foreach (var m in rd.sharedMaterials)
                 {
                     if (m == null || m.shader == null) continue;
-                    if (m.shader.name != "NonToon" && m.shader.name != "NonToonFur") continue;
+                    if (m.shader.name != "nontoon-fork" && m.shader.name != "nontoon-fork-fur") continue;
                     if (!m.HasProperty("_LightMinLimit")) continue;
                     if (lightIdFilter >= 0 && m.HasProperty("_SelfLightId") && m.GetInteger("_SelfLightId") != lightIdFilter) continue;
                     if (!result.Contains(m)) result.Add(m);

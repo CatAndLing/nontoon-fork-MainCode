@@ -284,7 +284,7 @@ namespace LilToonToNonToonConverter
         {
             if (!NonToonCompatibility.IsInstalled)
             {
-                EditorGUILayout.HelpBox(NTL10n.F("NonToon and/or NonToonFur shader was not found. Install NonToon {0} and Shader Core {1} through VPM.", ConverterConstants.ExpectedNonToonVersion, ConverterConstants.ExpectedShaderCoreVersion), MessageType.Error);
+                EditorGUILayout.HelpBox(NTL10n.F("nontoon-fork and/or nontoon-fork-fur shader was not found. Install NonToon {0} and Shader Core {1} through VPM.", ConverterConstants.ExpectedNonToonVersion, ConverterConstants.ExpectedShaderCoreVersion), MessageType.Error);
                 return;
             }
             var missing = NonToonCompatibility.MissingModules();
@@ -567,7 +567,7 @@ namespace LilToonToNonToonConverter
             EditorGUILayout.LabelField("转换疑难排查", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox("请先用最新版本重新转换同一对象，并目视确认转换后的材质。若问题仍在，可提供调试 ZIP。", MessageType.Info);
             EditorGUILayout.LabelField("安装状态", EditorStyles.boldLabel);
-            EditorGUILayout.HelpBox(NonToonCompatibility.IsInstalled ? NonToonCompatibility.VersionStatus : "找不到 NonToon 或 NonToonFur。请通过 VPM 安装 NonToon 与 Shader Core。", NonToonCompatibility.IsInstalled ? MessageType.Info : MessageType.Error);
+            EditorGUILayout.HelpBox(NonToonCompatibility.IsInstalled ? NonToonCompatibility.VersionStatus : "找不到 nontoon-fork 或 nontoon-fork-fur。请通过 VPM 安装 NonToon 与 Shader Core。", NonToonCompatibility.IsInstalled ? MessageType.Info : MessageType.Error);
 
             scroll = EditorGUILayout.BeginScrollView(scroll);
             DrawIssue("脸或部分材质偏亮", "请在日志里确认 Reflection / Apply Specular / Emission 的启用状态。转换器 1.1.3 起会禁用「父级 Reflection 关闭时的 Specular」和「实际强度为 0 的 Emission」。");

@@ -144,7 +144,7 @@ public static class NTPcssProbe
     static Material MakeMat(Texture2D map, int res, bool pcss, int quality, float softness, float strength,
                             float halfX = RAD, float bias = 0.02f)
     {
-        var m = new Material(Shader.Find("NonToon"));
+        var m = new Material(Shader.Find("nontoon-fork"));
         m.name = "NTPcssProbeMat";
         SetNum(m, "_UseSelfLight", 1);
         SetNum(m, "_SelfLightOnly", 1);
@@ -319,7 +319,7 @@ public static class NTPcssProbe
     // ---------------------------------------------------------------- 主流程
     static void Body()
     {
-        var shader = Shader.Find("NonToon");
+        var shader = Shader.Find("nontoon-fork");
         Check(shader != null, "找到 NonToon 着色器");
         if (shader == null) return;
         if (AssetDatabase.IsValidFolder(BakeFolder)) AssetDatabase.DeleteAsset(BakeFolder);

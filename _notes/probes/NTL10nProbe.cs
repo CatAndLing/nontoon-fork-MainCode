@@ -164,7 +164,7 @@ public static class NTL10nProbe
     {
         var l10n = FindType("jp.lilxyzw.shadercore.L10n");
         l10n?.GetMethod("Clear", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, null);
-        var shader = Shader.Find("NonToon");
+        var shader = Shader.Find("nontoon-fork");
         var path = shader != null ? AssetDatabase.GetAssetPath(shader) : null;
         LoadTable(path);
     }

@@ -17,14 +17,14 @@ namespace jp.lilxyzw.nontoon
 
         private static bool VectorAndZOffset(Shader shader, float x, float y, float z, float width, float zoffset, ref Color color)
         {
-            if (!shader || shader.name != "NonToon") return false;
+            if (!shader || shader.name != "nontoon-fork") return false;
             color = new(Mathf.Lerp(0.5f, x, width), Mathf.Lerp(0.5f, y, width), Mathf.Lerp(0.5f, z, width), zoffset);
             return true;
         }
 
         private static bool ModifyOutlineVertexR2Width(ref Material material)
         {
-            if (material.shader.name != "NonToon") return false;
+            if (material.shader.name != "nontoon-fork") return false;
             if (ID_OutlineFromVertexColor == -1) ID_OutlineFromVertexColor = Shader.PropertyToID("_OutlineFromVertexColor");
             material.SetInteger(ID_OutlineFromVertexColor, 1);
             return true;

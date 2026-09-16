@@ -132,7 +132,7 @@ public static class NTMaProbe
         if (AssetDatabase.IsValidFolder(Dir)) AssetDatabase.DeleteAsset(Dir);
         AssetDatabase.CreateFolder("Assets", "NTMaProbe");
 
-        var shader = Shader.Find("NonToon");
+        var shader = Shader.Find("nontoon-fork");
         Check(shader != null, "找到 NonToon 着色器");
         if (shader == null) return;
 

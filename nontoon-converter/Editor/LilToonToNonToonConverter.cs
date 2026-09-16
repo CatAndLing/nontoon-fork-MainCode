@@ -27,8 +27,8 @@ namespace LilToonToNonToonConverter
         internal const string MenuPath = "Tools/lilToon → NonToon 转换器 (Converter)";
         internal const string OutputFolderName = "NonToonConverted";
         internal const string ConvertedSuffix = "_NonToon";
-        internal const string NonToonShaderName = "NonToon";
-        internal const string NonToonFurShaderName = "NonToonFur";
+        internal const string NonToonShaderName = "nontoon-fork";
+        internal const string NonToonFurShaderName = "nontoon-fork-fur";
         // [NT-VENDOR] 期望版本随本分支更新（我们要求 NonToon ≥ 0.1.11、Shader Core ≥ 0.1.9）。
         internal const string ExpectedNonToonVersion = "0.3.11";
         internal const string ExpectedShaderCoreVersion = "0.1.9";
@@ -192,7 +192,7 @@ namespace LilToonToNonToonConverter
                 if (!NonToonCompatibility.IsInstalled)
                 {
                     entry.Severity = ConversionSeverity.Error;
-                    entry.Messages.Add(NTL10n.F("NonToon or NonToonFur was not found. Install NonToon {0} and Shader Core {1} through VPM first.", ConverterConstants.ExpectedNonToonVersion, ConverterConstants.ExpectedShaderCoreVersion));
+                    entry.Messages.Add(NTL10n.F("nontoon-fork or nontoon-fork-fur was not found. Install NonToon {0} and Shader Core {1} through VPM first.", ConverterConstants.ExpectedNonToonVersion, ConverterConstants.ExpectedShaderCoreVersion));
                     return entry;
                 }
                 if (!NonToonCompatibility.UsesSupportedVersions)
@@ -432,14 +432,14 @@ namespace LilToonToNonToonConverter
                 entry.Warn(NTL10n.L("MISSING MODULE HairSpecular: anisotropy was not converted."));
         }
 
-        // NonToonFur has a deliberately small, compatible set of fur controls.  Keep this
+        // nontoon-fork-fur has a deliberately small, compatible set of fur controls.  Keep this
         // mapping isolated from the normal material conversion: the source's advanced fur
         // controls (vector texture, gravity, randomization, etc.) have no target equivalent.
         private static void CopyFur(Material source, Material target, ConversionEntry entry)
         {
             if (!target.HasProperty("_FurNoiseMask"))
             {
-                entry.Warn(NTL10n.L("WARNING: The installed NonToonFur shader has no Fur Noise properties; fur-specific values were not converted."));
+                entry.Warn(NTL10n.L("WARNING: The installed nontoon-fork-fur shader has no Fur Noise properties; fur-specific values were not converted."));
                 return;
             }
 
@@ -448,45 +448,45 @@ namespace LilToonToNonToonConverter
             {
                 target.SetTexture("_FurNoiseMask", noise);
                 var scale = source.GetTextureScale("_FurNoiseMask");
-                // lilToon permits independent U/V scale while NonToonFur uses one scalar.
+                // lilToon permits independent U/V scale while nontoon-fork-fur uses one scalar.
                 // The geometric mean preserves the average repetition density without
                 // arbitrarily preferring either axis.
                 var tiling = Mathf.Sqrt(Mathf.Abs(scale.x * scale.y));
                 if (target.HasProperty("_FurNoiseTiling"))
                 {
                     SetNumber(target, "_FurNoiseTiling", Mathf.Max(.0001f, tiling));
-                    entry.Messages.Add(NTL10n.F("Mapped lilToon Fur Noise Mask and texture tiling to NonToonFur Fur Noise / Noise Tiling ({0}).", tiling.ToString("F3")));
+                    entry.Messages.Add(NTL10n.F("Mapped lilToon Fur Noise Mask and texture tiling to nontoon-fork-fur Fur Noise / Noise Tiling ({0}).", tiling.ToString("F3")));
                 }
                 else
-                    entry.Warn(NTL10n.L("WARNING: The installed NonToonFur shader has no Noise Tiling property; only the Fur Noise Mask was copied."));
+                    entry.Warn(NTL10n.L("WARNING: The installed nontoon-fork-fur shader has no Noise Tiling property; only the Fur Noise Mask was copied."));
                 if (Mathf.Abs(scale.x - scale.y) > .0001f || source.GetTextureOffset("_FurNoiseMask").sqrMagnitude > .0000001f)
-                    entry.Warn(NTL10n.L("WARNING: NonToonFur Fur Noise has one tiling value only; lilToon non-uniform Noise scale and offset were approximated."));
+                    entry.Warn(NTL10n.L("WARNING: nontoon-fork-fur Fur Noise has one tiling value only; lilToon non-uniform Noise scale and offset were approximated."));
             }
 
             if (source.HasProperty("_FurLayerNum"))
             {
                 var subdivision = Mathf.Clamp(Mathf.RoundToInt(source.GetFloat("_FurLayerNum")), 1, 3);
                 SetInteger(target, "_FurSubdivision", subdivision);
-                entry.Messages.Add(NTL10n.F("Mapped lilToon Fur Layer Num to NonToonFur Subdivision ({0}).", subdivision));
+                entry.Messages.Add(NTL10n.F("Mapped lilToon Fur Layer Num to nontoon-fork-fur Subdivision ({0}).", subdivision));
             }
 
             if (source.HasProperty("_FurVector") && target.HasProperty("_FurVector"))
             {
                 var sourceVector = source.GetVector("_FurVector");
                 var direction = new Vector3(sourceVector.x, sourceVector.y, sourceVector.z);
-                // lilToon normalizes xyz and uses w as the displacement length. NonToonFur
+                // lilToon normalizes xyz and uses w as the displacement length. nontoon-fork-fur
                 // stores the final tangent-space displacement directly in xyz.
                 var displacement = direction.sqrMagnitude > .0000001f
                     ? direction.normalized * sourceVector.w
                     : Vector3.zero;
                 target.SetVector("_FurVector", new Vector4(displacement.x, displacement.y, displacement.z, 0f));
-                entry.Messages.Add(NTL10n.L("Mapped lilToon Fur Vector direction and length to NonToonFur Fur Vector."));
+                entry.Messages.Add(NTL10n.L("Mapped lilToon Fur Vector direction and length to nontoon-fork-fur Fur Vector."));
             }
 
             if (HasAssetTexture(source, "_FurVectorTex") || IsEnabled(source, "_VertexColor2FurVector"))
-                entry.Warn(NTL10n.L("WARNING: NonToonFur has no Fur Vector Texture or vertex-color direction input; detailed lilToon fur direction was approximated with Fur Vector."));
+                entry.Warn(NTL10n.L("WARNING: nontoon-fork-fur has no Fur Vector Texture or vertex-color direction input; detailed lilToon fur direction was approximated with Fur Vector."));
             if (Mathf.Abs(GetFloat(source, "_FurGravity", 0f)) > .0001f || Mathf.Abs(GetFloat(source, "_FurRandomize", 0f)) > .0001f)
-                entry.Warn(NTL10n.L("WARNING: NonToonFur has no lilToon-equivalent Fur Gravity or Randomize control; these fur direction modifiers were not converted."));
+                entry.Warn(NTL10n.L("WARNING: nontoon-fork-fur has no lilToon-equivalent Fur Gravity or Randomize control; these fur direction modifiers were not converted."));
         }
 
         private static void CopySecondNormal(Material source, Material target, ConversionEntry entry)

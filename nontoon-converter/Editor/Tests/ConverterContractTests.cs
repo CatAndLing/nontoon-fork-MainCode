@@ -11,8 +11,8 @@ namespace LilToonToNonToonConverter.Tests
         {
             Assert.That(ConverterConstants.ExpectedNonToonVersion, Is.EqualTo("0.1.3"));
             Assert.That(ConverterConstants.ExpectedShaderCoreVersion, Is.EqualTo("0.1.5"));
-            Assert.That(ConverterConstants.NonToonShaderName, Is.EqualTo("NonToon"));
-            Assert.That(ConverterConstants.NonToonFurShaderName, Is.EqualTo("NonToonFur"));
+            Assert.That(ConverterConstants.NonToonShaderName, Is.EqualTo("nontoon-fork"));
+            Assert.That(ConverterConstants.NonToonFurShaderName, Is.EqualTo("nontoon-fork-fur"));
         }
 
         [Test]

@@ -75,7 +75,7 @@ public static class NTLightAdjusterProbe
         body.transform.SetParent(avatar.transform, false);
         UnityEngine.Object.DestroyImmediate(body.GetComponent<Collider>());
 
-        var shader = Shader.Find("NonToon");
+        var shader = Shader.Find("nontoon-fork");
         Check(shader != null, "找到 NonToon 着色器");
         if (shader == null) return;
         var mat = new Material(shader) { name = "NTLAProbeMat" };
@@ -411,7 +411,7 @@ public static class NTLightAdjusterProbe
         }
 
         // E5 属性契约 —— 名字或类型写错都是**静默无效**，所以逐条锁死
-        var nonToonShader = Shader.Find("NonToon");
+        var nonToonShader = Shader.Find("nontoon-fork");
         Check(nonToonShader != null, "找到 NonToon 着色器（属性契约检查的前提）");
         if (nonToonShader != null)
         {

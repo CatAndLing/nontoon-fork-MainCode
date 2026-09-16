@@ -160,7 +160,7 @@ public static class NTAaoProbe
         var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         if (!AssetDatabase.IsValidFolder(Dir)) AssetDatabase.CreateFolder("Assets", "NTAaoProbe");
 
-        var shader = Shader.Find("NonToon");
+        var shader = Shader.Find("nontoon-fork");
         Check(shader != null, "找到 NonToon 着色器");
         if (shader == null) return;
 
@@ -329,7 +329,7 @@ public static class NTAaoProbe
 
         // Q2：AAO 有没有动 NonToon 的材质/贴图
         var pMat = body.GetComponent<MeshRenderer>()?.sharedMaterial;
-        var pMatMerged = processed.GetComponentsInChildren<Renderer>(true).SelectMany(r => r.sharedMaterials).FirstOrDefault(m => m != null && m.shader != null && m.shader.name.StartsWith("NonToon"));
+        var pMatMerged = processed.GetComponentsInChildren<Renderer>(true).SelectMany(r => r.sharedMaterials).FirstOrDefault(m => m != null && m.shader != null && m.shader.name.StartsWith("nontoon-fork"));
         var matNow = AssetDatabase.LoadAssetAtPath<Material>(matPath);
         Check(matNow != null, "【Q2】NonToon 材质资产没被删掉");
         if (matNow != null)

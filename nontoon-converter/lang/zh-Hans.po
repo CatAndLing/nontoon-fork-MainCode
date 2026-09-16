@@ -62,8 +62,8 @@ msgstr "未安装"
 msgid "NonToon {0} (target {1}), Shader Core {2} (target {3})"
 msgstr "NonToon {0}（目标 {1}），Shader Core {2}（目标 {3}）"
 
-msgid "NonToon and/or NonToonFur shader was not found. Install NonToon {0} and Shader Core {1} through VPM."
-msgstr "找不到 NonToon 与/或 NonToonFur 着色器。请先通过 VPM 安装 NonToon {0} 与 Shader Core {1}。"
+msgid "nontoon-fork and/or nontoon-fork-fur shader was not found. Install NonToon {0} and Shader Core {1} through VPM."
+msgstr "找不到 nontoon-fork 与/或 nontoon-fork-fur 着色器。请先通过 VPM 安装 NonToon {0} 与 Shader Core {1}。"
 
 msgid "NonToon core and detected modules are available. "
 msgstr "NonToon 本体与检测到的模块都可用。"
@@ -77,8 +77,8 @@ msgstr "缺少 NonToon 模块："
 msgid ". Related features will be reported and skipped."
 msgstr "。相关功能会被报告并跳过。"
 
-msgid "NonToon or NonToonFur was not found. Install NonToon {0} and Shader Core {1} through VPM first."
-msgstr "找不到 NonToon 或 NonToonFur。请先通过 VPM 安装 NonToon {0} 与 Shader Core {1}。"
+msgid "nontoon-fork or nontoon-fork-fur was not found. Install NonToon {0} and Shader Core {1} through VPM first."
+msgstr "找不到 nontoon-fork 或 nontoon-fork-fur。请先通过 VPM 安装 NonToon {0} 与 Shader Core {1}。"
 
 msgid "WARNING: Installed package versions are older than the tested target. {0}. Update through VPM, then convert again."
 msgstr "警告：已安装的包版本低于本转换器测试过的目标版本（{0}）。请通过 VPM 更新后重新转换。"
@@ -276,29 +276,29 @@ msgid "WARNING: Emission Blend Mask uses Shared Mask A because R/G/B are occupie
 msgstr "警告：因为 R/G/B 已被占用，发光混合遮罩改用共享遮罩 A；高光、边缘光与头发高光也可能受这个遮罩限制。"
 
 # ---- 毛发 ----
-msgid "WARNING: The installed NonToonFur shader has no Fur Noise properties; fur-specific values were not converted."
-msgstr "警告：已安装的 NonToonFur 着色器没有毛发噪声属性，毛发相关参数没有转换。"
+msgid "WARNING: The installed nontoon-fork-fur shader has no Fur Noise properties; fur-specific values were not converted."
+msgstr "警告：已安装的 nontoon-fork-fur 着色器没有毛发噪声属性，毛发相关参数没有转换。"
 
-msgid "Mapped lilToon Fur Noise Mask and texture tiling to NonToonFur Fur Noise / Noise Tiling ({0})."
-msgstr "已把 lilToon 的毛发噪声遮罩与贴图平铺映射到 NonToonFur 的毛发噪声/噪声平铺（{0}）。"
+msgid "Mapped lilToon Fur Noise Mask and texture tiling to nontoon-fork-fur Fur Noise / Noise Tiling ({0})."
+msgstr "已把 lilToon 的毛发噪声遮罩与贴图平铺映射到 nontoon-fork-fur 的毛发噪声/噪声平铺（{0}）。"
 
-msgid "WARNING: The installed NonToonFur shader has no Noise Tiling property; only the Fur Noise Mask was copied."
-msgstr "警告：已安装的 NonToonFur 没有噪声平铺属性，只复制了毛发噪声遮罩。"
+msgid "WARNING: The installed nontoon-fork-fur shader has no Noise Tiling property; only the Fur Noise Mask was copied."
+msgstr "警告：已安装的 nontoon-fork-fur 没有噪声平铺属性，只复制了毛发噪声遮罩。"
 
-msgid "WARNING: NonToonFur Fur Noise has one tiling value only; lilToon non-uniform Noise scale and offset were approximated."
-msgstr "警告：NonToonFur 的毛发噪声只有一个平铺值，lilToon 的非等比缩放与偏移已近似处理。"
+msgid "WARNING: nontoon-fork-fur Fur Noise has one tiling value only; lilToon non-uniform Noise scale and offset were approximated."
+msgstr "警告：nontoon-fork-fur 的毛发噪声只有一个平铺值，lilToon 的非等比缩放与偏移已近似处理。"
 
-msgid "Mapped lilToon Fur Layer Num to NonToonFur Subdivision ({0})."
-msgstr "已把 lilToon 的毛发层数映射到 NonToonFur 的细分（{0}）。"
+msgid "Mapped lilToon Fur Layer Num to nontoon-fork-fur Subdivision ({0})."
+msgstr "已把 lilToon 的毛发层数映射到 nontoon-fork-fur 的细分（{0}）。"
 
-msgid "Mapped lilToon Fur Vector direction and length to NonToonFur Fur Vector."
-msgstr "已把 lilToon 的毛发方向与长度映射到 NonToonFur 的毛发向量。"
+msgid "Mapped lilToon Fur Vector direction and length to nontoon-fork-fur Fur Vector."
+msgstr "已把 lilToon 的毛发方向与长度映射到 nontoon-fork-fur 的毛发向量。"
 
-msgid "WARNING: NonToonFur has no Fur Vector Texture or vertex-color direction input; detailed lilToon fur direction was approximated with Fur Vector."
-msgstr "警告：NonToonFur 没有毛发方向贴图与顶点色方向输入，lilToon 的精细毛发方向已用毛发向量近似。"
+msgid "WARNING: nontoon-fork-fur has no Fur Vector Texture or vertex-color direction input; detailed lilToon fur direction was approximated with Fur Vector."
+msgstr "警告：nontoon-fork-fur 没有毛发方向贴图与顶点色方向输入，lilToon 的精细毛发方向已用毛发向量近似。"
 
-msgid "WARNING: NonToonFur has no lilToon-equivalent Fur Gravity or Randomize control; these fur direction modifiers were not converted."
-msgstr "警告：NonToonFur 没有等价于 lilToon 的毛发重力与随机化控制，这些毛发方向修饰没有转换。"
+msgid "WARNING: nontoon-fork-fur has no lilToon-equivalent Fur Gravity or Randomize control; these fur direction modifiers were not converted."
+msgstr "警告：nontoon-fork-fur 没有等价于 lilToon 的毛发重力与随机化控制，这些毛发方向修饰没有转换。"
 
 # ---- 描边 ----
 msgid "WARNING: Outline is unavailable in the installed NonToon shader."

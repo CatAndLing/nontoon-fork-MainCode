@@ -76,8 +76,8 @@ function passBlock(pipeline) {
 let src = readFileSync(SRC, 'utf8');
 
 // 1) 改着色器名
-src = src.replace(/^Shader "NonToon"/m, 'Shader "NonToonTwoPass"');
-if (!src.includes('Shader "NonToonTwoPass"')) throw new Error('着色器名替换失败');
+src = src.replace(/^Shader "nontoon-fork"(?=\r?\n)/, 'Shader "nontoon-fork-twopass"');
+if (!src.startsWith('Shader "nontoon-fork-twopass"\n') && !src.startsWith('Shader "nontoon-fork-twopass"\r\n')) throw new Error('着色器名替换失败');
 
 // 2) 追加 _Pre* 属性（挂在 __Rendering 折叠块里，紧跟 _AlphaToMask 之后）
 const anchor = /(\[SCToggle\]\s+_AlphaToMask\s+\("AlphaToMask", Int\) = 0\n)/;
@@ -116,7 +116,7 @@ for (const ins of inserts.sort((a, b) => b.at - a.at)) {
 const header = [
   '// ⚠️ 本文件由 tools/make-twopass.mjs 从 NonToon.scshader **生成**，请勿手改。',
   '//    重跑：node tools/make-twopass.mjs',
-  '//    （上面那行 `Shader "NonToonTwoPass"` 必须是本文件第一行 —— ShaderCore 的正则没有 Multiline。）',
+  '//    （上面那行 `Shader "nontoon-fork-twopass"` 必须是本文件第一行 —— ShaderCore 的正则没有 Multiline。）',
   '//',
   '// 为什么需要这个变体（[NT-FEAT 26] 两趟透明）：',
   '//   lilToon 的 TwoPass 透明（Hidden/lilToonTwoPassTransparentOutline）用 **两个 pass**',
@@ -146,7 +146,7 @@ writeFileSync(DST, out, 'utf8');
 console.log(`✅ 已生成 ${DST}`);
 console.log(`   第一行 = ${lines[0]}`);
 console.log(`   插入的 ForwardBack pass：${inserts.map(x => x.pipeline).join(', ')}`);
-console.log(`   着色器名：NonToonTwoPass  新增属性：_PreZWrite / _PreCull / _PreSrcBlend / _PreDstBlend`);
+console.log(`   着色器名：nontoon-fork-twopass  新增属性：_PreZWrite / _PreCull / _PreSrcBlend / _PreDstBlend`);
 
 // ── 核心属性文件：**逐字复制**基底 + 追加两趟专用属性 ────────────────────────
 // ⛔ 三条硬约束（都是踩出来的）：

@@ -88,8 +88,8 @@ public static class NTE2EProbe6
     static void Body()
     {
         L("=== E2E 探针 v6 === " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-        var sh = Shader.Find("NonToon");
-        Check(sh != null, "Shader.Find(\"NonToon\") 非 null");
+        var sh = Shader.Find("nontoon-fork");
+        Check(sh != null, "Shader.Find(\"nontoon-fork\") 非 null");
         if (sh == null) return;
 
         // ---------- 1. 属性类型普查 ----------

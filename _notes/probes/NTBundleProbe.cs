@@ -115,6 +115,22 @@ public static class NTBundleProbe
         Check(SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.ARGBFloat) &&
               SystemInfo.SupportsTextureFormat(TextureFormat.RGBAFloat), "支持线性浮点渲染与读回");
         if (Fail != 0) return;
+        Sb.AppendLine("== Shader rename: forced import / exact name resolution ==");
+        foreach (var pair in new[] {
+            new[] { "NonToon", "nontoon-fork" },
+            new[] { "NonToonFur", "nontoon-fork-fur" },
+            new[] { "NonToonTwoPass", "nontoon-fork-twopass" }
+        })
+        {
+            var path = "Packages/com.catandling.nontoon/Shaders/" + pair[0] + ".scshader";
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
+            var imported = AssetDatabase.LoadAssetAtPath<Shader>(path);
+            var found = Shader.Find(pair[1]);
+            Check(imported != null && imported.name == pair[1] && found == imported,
+                "Shader.Find(\"" + pair[1] + "\") != null and resolves to " + path);
+            Check(Shader.Find(pair[0]) == null, "Shader.Find(\"" + pair[0] + "\") == null (fork-only project)");
+        }
+        if (Fail != 0) return;
         if (!AssetDatabase.IsValidFolder(Dir)) AssetDatabase.CreateFolder("Assets", "NTProbe");
         if (!AssetDatabase.IsValidFolder(BundleDir)) AssetDatabase.CreateFolder(Dir, "Bundles");
         File.WriteAllText(BrokenShaderPath, BrokenSource);
@@ -127,12 +143,13 @@ public static class NTBundleProbe
         var alpha = SaveTexture("Alpha", new Color(1, 1, 1, 0.4f));
         SaveTexture("Occluded", Color.black);
         var cases = new List<Case>();
-        foreach (var name in new[] { "NonToon", "NonToonFur" })
+        foreach (var name in new[] { "nontoon-fork", "nontoon-fork-fur" })
         {
             var shader = Shader.Find(name);
             if (shader == null)
             {
-                AssetDatabase.ImportAsset("Packages/com.catandling.nontoon/Shaders/" + name + ".scshader", ImportAssetOptions.ForceUpdate);
+                var fileName = name == "nontoon-fork" ? "NonToon" : "NonToonFur";
+                AssetDatabase.ImportAsset("Packages/com.catandling.nontoon/Shaders/" + fileName + ".scshader", ImportAssetOptions.ForceUpdate);
                 shader = Shader.Find(name);
             }
             Check(shader != null && shader.name == name, "找到产品 shader " + name);
@@ -153,7 +170,7 @@ public static class NTBundleProbe
                 SaveMaterial(m, c.Path); cases.Add(c);
             }
             // Fur 的源码固定 _RenderingMode=0，不伪造透明模式覆盖。
-            foreach (var mode in name == "NonToon" ? new[] { 0, 2 } : new[] { 0 })
+            foreach (var mode in name == "nontoon-fork" ? new[] { 0, 2 } : new[] { 0 })
             foreach (var keywords in new[] { false, true })
             {
                 var m = new Material(shader);
@@ -201,7 +218,7 @@ public static class NTBundleProbe
                 Validate(m, c, "产物");
                 if (m == null) continue;
                 Check(m != AssetDatabase.LoadAssetAtPath<Material>(c.Path), "材质来自 bundle 而非 AssetDatabase: " + m.name);
-                foreach (var p in c.Shader == "NonToon" ? new[] { "Forward", "ForwardAdd", "ShadowCaster", "Outline" } : new[] { "Forward", "ForwardAdd", "ShadowCaster", "Fur" })
+                foreach (var p in c.Shader == "nontoon-fork" ? new[] { "Forward", "ForwardAdd", "ShadowCaster", "Outline" } : new[] { "Forward", "ForwardAdd", "ShadowCaster", "Fur" })
                 {
                     var index = m.FindPass(p);
                     Check(index >= 0 && m.SetPass(index), "产物 Pass 可用: " + m.name + "/" + p);
@@ -218,7 +235,7 @@ public static class NTBundleProbe
         Check(m != null && m.shader != null && m.shader.name == c.Shader, label + " shader 匹配");
         if (m == null) return;
         Check(m.shader.isSupported, label + " shader 支持当前设备");
-        if (c.Shader == "NonToon") Check(m.GetInteger("_RenderingMode") == c.Profile, label + " RenderingMode=" + c.Profile);
+        if (c.Shader == "nontoon-fork") Check(m.GetInteger("_RenderingMode") == c.Profile, label + " RenderingMode=" + c.Profile);
         else Check(!m.HasProperty("_RenderingMode"), label + " Fur 无 RenderingMode 属性，源码固定0");
         Check(m.IsKeywordEnabled(Matcap + "1") == c.Keywords && m.IsKeywordEnabled(Details + "1") == c.Keywords &&
               m.IsKeywordEnabled(Matcap + "0") == !c.Keywords && m.IsKeywordEnabled(Details + "0") == !c.Keywords, label + " keyword 实态匹配");
@@ -228,7 +245,7 @@ public static class NTBundleProbe
     static void Configure(Material m, int mode, Texture2D alpha, bool keywords)
     {
         if (m.HasProperty("_RenderingMode")) SetNumber(m, "_RenderingMode", mode);
-        if (m.shader.name == "NonToon")
+        if (m.shader.name == "nontoon-fork")
         {
             SetNumber(m, "_SrcBlend", mode == 2 ? (int)BlendMode.SrcAlpha : (int)BlendMode.One);
             SetNumber(m, "_DstBlend", mode == 2 ? (int)BlendMode.OneMinusSrcAlpha : (int)BlendMode.Zero);
@@ -256,7 +273,7 @@ public static class NTBundleProbe
     static void PixelGate(Material m, Case c, Texture2D occluded)
     {
         Sb.AppendLine("== 像素 " + m.name + "（中心16x16固定ROI，不按亮度挑像素） ==");
-        var alpha = c.Shader == "NonToon" && c.Profile == 2 ? 0.4f : 1f;
+        var alpha = c.Shader == "nontoon-fork" && c.Profile == 2 ? 0.4f : 1f;
         var expectedT = 1 - alpha;
         var black = Render(m, Color.black);
         var white = Render(m, Color.white);

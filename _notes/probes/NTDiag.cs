@@ -38,14 +38,14 @@ public static class NTDiag
             sb.AppendLine("AssetDatabase path exists = " + (AssetDatabase.LoadMainAssetAtPath(ShaderAssetPath) != null));
             var shader = AssetDatabase.LoadAssetAtPath<Shader>(ShaderAssetPath);
             sb.AppendLine("LoadAssetAtPath<Shader> = " + (shader == null ? "null" : shader.name));
-            sb.AppendLine("Shader.Find(NonToon)    = " + (Shader.Find("NonToon") == null ? "null" : "ok"));
+            sb.AppendLine("Shader.Find(nontoon-fork)    = " + (Shader.Find("nontoon-fork") == null ? "null" : "ok"));
 
             sb.AppendLine("--- 强制重导 ---");
             AssetDatabase.ImportAsset(ShaderAssetPath, ImportAssetOptions.ForceUpdate);
             shader = AssetDatabase.LoadAssetAtPath<Shader>(ShaderAssetPath);
             sb.AppendLine("after import = " + (shader == null ? "null" : shader.name));
-            var found = Shader.Find("NonToon");
-            sb.AppendLine("Shader.Find(NonToon) = " + (found == null ? "null" : "ok"));
+            var found = Shader.Find("nontoon-fork");
+            sb.AppendLine("Shader.Find(nontoon-fork) = " + (found == null ? "null" : "ok"));
             ok = found != null;
             if (shader != null)
             {

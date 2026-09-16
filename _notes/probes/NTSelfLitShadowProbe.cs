@@ -68,7 +68,7 @@ public static class NTSelfLitShadowProbe
         Check(editorType != null, "找到面板 NTSelfLitShadowEditor");
         if (compType == null || writerType == null || editorType == null) return;
 
-        var shader = Shader.Find("NonToon");
+        var shader = Shader.Find("nontoon-fork");
         Check(shader != null, "找到 NonToon 着色器");
         if (shader == null) return;
 

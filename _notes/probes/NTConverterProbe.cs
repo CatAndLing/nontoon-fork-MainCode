@@ -33,7 +33,11 @@ namespace LilToonToNonToonConverter
         {
             var shader = Shader.Find(shaderName);
             if (shader != null) return shader;
-            var path = "Packages/com.catandling.nontoon/Shaders/" + shaderName + ".scshader";
+            var fileName = shaderName == "nontoon-fork" ? "NonToon"
+                : shaderName == "nontoon-fork-fur" ? "NonToonFur"
+                : shaderName == "nontoon-fork-twopass" ? "NonToonTwoPass"
+                : throw new ArgumentException("Unknown fork shader: " + shaderName);
+            var path = "Packages/com.catandling.nontoon/Shaders/" + fileName + ".scshader";
             AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
             return Shader.Find(shaderName);
         }
@@ -541,7 +545,7 @@ namespace LilToonToNonToonConverter
                 "_SelfLightReceiveMaskChannel", "_SelfLightReceiveMaskStrength"
             };
             var maskProps = new[] { "_ShadowMaskEnable", "_ShadowStrengthMask", "_ShadowBorderMask", "_ShadowBlurMask" };
-            foreach (var name in new[] { "NonToon", "NonToonFur" })
+            foreach (var name in new[] { "nontoon-fork", "nontoon-fork-fur" })
             {
                 var shader = Shader.Find(name);
                 if (shader == null) { Check(name + " 着色器存在", false, "<null>"); continue; }
@@ -604,7 +608,7 @@ namespace LilToonToNonToonConverter
         // [NT-TEST] v0.3.1：PCSS 画质档位属性 + 实时光源模式（真的挂 Spot Light）。
         private static void RunV031Case()
         {
-            foreach (var name in new[] { "NonToon", "NonToonFur" })
+            foreach (var name in new[] { "nontoon-fork", "nontoon-fork-fur" })
             {
                 var shader = Shader.Find(name);
                 if (shader == null) { Check(name + " 存在", false, "<null>"); continue; }
@@ -670,7 +674,7 @@ namespace LilToonToNonToonConverter
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
             // 材质用的是 NonToon（但插件是着色器无关的，必须一个属性都不动）
-            var mat = new Material(EnsureShader("NonToon"));
+            var mat = new Material(EnsureShader("nontoon-fork"));
             if (mat.HasProperty("_UseSelfLight")) mat.SetInteger("_UseSelfLight", 0);
             renderer.sharedMaterial = mat;
 
@@ -715,7 +719,7 @@ namespace LilToonToNonToonConverter
         // [NT-TEST] v0.3.4：把"默认消耗"钉死 —— 默认必须是最省的那一档。
         private static void RunV034Case()
         {
-            var shader = EnsureShader("NonToon");
+            var shader = EnsureShader("nontoon-fork");
             if (shader == null) { Check("NonToon 存在", false, "<null>"); return; }
             // Int/Range 混着，直接建一个材质读默认值（GetPropertyDefaultFloatValue 对 Int 会抛异常）
             var fresh = new Material(shader);
@@ -753,7 +757,7 @@ namespace LilToonToNonToonConverter
         // [NT-TEST] v0.3.5：色温 + 环境匹配 + UI（内部属性不上面板）。
         private static void RunV035Case()
         {
-            var shader = EnsureShader("NonToon");
+            var shader = EnsureShader("nontoon-fork");
             if (shader == null) { Check("NonToon 存在", false, "<null>"); return; }
             var fresh = new Material(shader);
 

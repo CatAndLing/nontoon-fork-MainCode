@@ -1,4 +1,4 @@
-Shader "NonToonFur"
+Shader "nontoon-fork-fur"
 {
     Properties
     {

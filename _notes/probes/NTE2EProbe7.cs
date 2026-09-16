@@ -81,7 +81,7 @@ public static class NTE2EProbe7
         var loadM = scl10nType?.GetMethod("Load", new[] { typeof(string) });
         var Lm = scl10nType?.GetMethod("L", new[] { typeof(string) });
 
-        var sh = Shader.Find("NonToon");
+        var sh = Shader.Find("nontoon-fork");
         var mat = new Material(sh);
         var props = MaterialEditor.GetMaterialProperties(new UnityEngine.Object[] { mat });
         var raw = props.Select(p => p.displayName).ToArray();

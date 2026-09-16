@@ -1,7 +1,7 @@
-Shader "NonToonTwoPass"
+Shader "nontoon-fork-twopass"
 // ⚠️ 本文件由 tools/make-twopass.mjs 从 NonToon.scshader **生成**，请勿手改。
 //    重跑：node tools/make-twopass.mjs
-//    （上面那行 `Shader "NonToonTwoPass"` 必须是本文件第一行 —— ShaderCore 的正则没有 Multiline。）
+//    （上面那行 `Shader "nontoon-fork-twopass"` 必须是本文件第一行 —— ShaderCore 的正则没有 Multiline。）
 //
 // 为什么需要这个变体（[NT-FEAT 26] 两趟透明）：
 //   lilToon 的 TwoPass 透明（Hidden/lilToonTwoPassTransparentOutline）用 **两个 pass**

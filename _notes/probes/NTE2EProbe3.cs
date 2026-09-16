@@ -109,21 +109,22 @@ public static class NTE2EProbe3
     static void Body()
     {
         L("=== E2E 探针 v3 === " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-        var sh = Shader.Find("NonToon");
+        var sh = Shader.Find("nontoon-fork");
         if (sh == null)
         {
             AssetDatabase.ImportAsset("Packages/com.catandling.nontoon/Shaders/NonToon.scshader", ImportAssetOptions.ForceUpdate);
-            AssetDatabase.Refresh(); sh = Shader.Find("NonToon");
+            AssetDatabase.Refresh(); sh = Shader.Find("nontoon-fork");
         }
-        Check(sh != null, "Shader.Find(\"NonToon\") 非 null");
+        Check(sh != null, "Shader.Find(\"nontoon-fork\") 非 null");
         if (sh == null) return;
 
         // ================= A. 生成的 ShaderLab 源码里到底有什么 =================
         L("");
         L("[A] 生成着色器源码审计（这是真正被编译的东西，不是我们的 .hlsl 源文件）");
-        foreach (var name in new[] { "NonToon", "NonToonFur" })
+        foreach (var name in new[] { "nontoon-fork", "nontoon-fork-fur" })
         {
-            var path = "Packages/com.catandling.nontoon/Shaders/" + name + ".scshader";
+            var fileName = name == "nontoon-fork" ? "NonToon" : "NonToonFur";
+            var path = "Packages/com.catandling.nontoon/Shaders/" + fileName + ".scshader";
             var objs = AssetDatabase.LoadAllAssetsAtPath(path);
             var src = objs.OfType<TextAsset>().FirstOrDefault();
             if (src == null) { Bad(name + " 没有名为 Shader Source 的子资源 TextAsset"); continue; }
