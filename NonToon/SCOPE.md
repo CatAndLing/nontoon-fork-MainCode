@@ -7,7 +7,7 @@
 ## What this is
 
 A fork of `lilxyzw/NonToon` **0.1.3**. It deliberately keeps the **same package id**
-(`jp.lilxyzw.nontoon`) so that installing it upgrades the official NonToon in place.
+(`com.catandling.nontoon`) so that installing it upgrades the official NonToon in place.
 
 **It is not an official upstream release.** Upstream licence and attribution are retained.
 Its display name is marked as a fork.
@@ -81,7 +81,7 @@ The active realtime self-shadow design is unchanged: a light mounted by the comp
 ## Blocker that must be decided before any real release
 
 This fork **reuses upstream's package id**. Therefore any third-party package that declares
-`jp.lilxyzw.nontoon: ^0.1.3` **cannot resolve against 0.3.x** (caret semantics: `>=0.1.3 <0.2.0`).
+~~`jp.lilxyzw.nontoon: ^0.1.3` cannot resolve against 0.3.x~~ **已作废（2026-09-18）**：本 fork 已改用自有包 id `com.catandling.nontoon` @ 0.3.11，与上游 id 不再冲突。第三方包若依赖上游 `jp.lilxyzw.nontoon`，会各自安装、互不覆盖；但也**不会**作用于本 fork（LightLimit 例外：它按路径含 nontoon 扫描 .scshader，仍会命中本包）。
 At least one published package does exactly that. Package identity must be settled — either an explicit
 replacement policy with coordinated dependency support, or a distinct package/asset identity that can
 coexist — **before** this is published to a listing.

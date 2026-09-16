@@ -16,8 +16,8 @@ using UnityEngine;
 
 public static class NTDumpShader
 {
-    const string ShaderPath = "Packages/jp.lilxyzw.nontoon/Shaders/NonToon.scshader";
-    const string FurPath    = "Packages/jp.lilxyzw.nontoon/Shaders/NonToonFur.scshader";
+    const string ShaderPath = "Packages/com.catandling.nontoon/Shaders/NonToon.scshader";
+    const string FurPath    = "Packages/com.catandling.nontoon/Shaders/NonToonFur.scshader";
 
     public static void Run()
     {

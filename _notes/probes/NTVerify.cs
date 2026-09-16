@@ -18,7 +18,7 @@ public static class NTVerify
     {
         var sh = Shader.Find(name);
         if (sh != null) return sh;
-        AssetDatabase.ImportAsset("Packages/jp.lilxyzw.nontoon/Shaders/" + name + ".scshader",
+        AssetDatabase.ImportAsset("Packages/com.catandling.nontoon/Shaders/" + name + ".scshader",
             ImportAssetOptions.ForceUpdate);
         return Shader.Find(name);
     }

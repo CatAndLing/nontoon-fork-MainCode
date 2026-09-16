@@ -112,7 +112,7 @@ public static class NTE2EProbe3
         var sh = Shader.Find("NonToon");
         if (sh == null)
         {
-            AssetDatabase.ImportAsset("Packages/jp.lilxyzw.nontoon/Shaders/NonToon.scshader", ImportAssetOptions.ForceUpdate);
+            AssetDatabase.ImportAsset("Packages/com.catandling.nontoon/Shaders/NonToon.scshader", ImportAssetOptions.ForceUpdate);
             AssetDatabase.Refresh(); sh = Shader.Find("NonToon");
         }
         Check(sh != null, "Shader.Find(\"NonToon\") 非 null");
@@ -123,7 +123,7 @@ public static class NTE2EProbe3
         L("[A] 生成着色器源码审计（这是真正被编译的东西，不是我们的 .hlsl 源文件）");
         foreach (var name in new[] { "NonToon", "NonToonFur" })
         {
-            var path = "Packages/jp.lilxyzw.nontoon/Shaders/" + name + ".scshader";
+            var path = "Packages/com.catandling.nontoon/Shaders/" + name + ".scshader";
             var objs = AssetDatabase.LoadAllAssetsAtPath(path);
             var src = objs.OfType<TextAsset>().FirstOrDefault();
             if (src == null) { Bad(name + " 没有名为 Shader Source 的子资源 TextAsset"); continue; }
@@ -181,7 +181,7 @@ public static class NTE2EProbe3
             // 按 ShaderCore 的实际做法：先 Load(着色器路径)，模块属性由各自的 moduleID 提供
             var raw = props.Select(p => p.displayName).ToArray();
             var best = new Dictionary<string, string>();
-            var contexts = new List<string> { "Packages/jp.lilxyzw.nontoon/Shaders/NonToon.scshader" };
+            var contexts = new List<string> { "Packages/com.catandling.nontoon/Shaders/NonToon.scshader" };
             // 注册表里所有模块 id 也各当一个上下文
             var regPath = "ProjectSettings/jp.lilxyzw.shadercore.asset";
             if (File.Exists(regPath))
@@ -192,7 +192,7 @@ public static class NTE2EProbe3
             }
 
             // 先看看 core 键单独能不能翻出来
-            loadM.Invoke(null, new object[] { "Packages/jp.lilxyzw.nontoon/Shaders/NonToon.scshader" });
+            loadM.Invoke(null, new object[] { "Packages/com.catandling.nontoon/Shaders/NonToon.scshader" });
             foreach (var k in new[] { "__Texture", "__SharedMask", "__MaskChannel", "__RenderingMode", "__SelectModules", "Shadow Bias", "Outline Color", "Light Min Limit" })
             {
                 var v = (string)Lm.Invoke(null, new object[] { k });

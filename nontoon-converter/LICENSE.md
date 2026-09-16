@@ -47,5 +47,5 @@ SOFTWARE.
 
 ## 3. 关于 NonToon 本体
 
-本包**不包含** NonToon 着色器本体。它依赖 `jp.lilxyzw.nontoon`（NonToon (Fork)），
+本包**不包含** NonToon 着色器本体。它依赖 `com.catandling.nontoon`（NonToon (Fork)），
 该包基于 [lilxyzw/NonToon](https://github.com/lilxyzw/NonToon)，遵循其原始 LICENSE。

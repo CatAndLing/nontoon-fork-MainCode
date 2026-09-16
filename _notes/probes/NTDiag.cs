@@ -14,7 +14,7 @@ public static class NTDiag
     // [NT-TEST-FIX] 硬编码绝对路径 → 相对当前工程
     private static string Out { get { return Path.Combine(Directory.GetCurrentDirectory(), "ntdiag.txt"); } }
     // ⚠️ 别把这个常量命名为 Path —— 会遮蔽 System.IO.Path，导致 Path.Combine 编译不过（踩过）
-    private const string ShaderAssetPath = "Packages/jp.lilxyzw.nontoon/Shaders/NonToon.scshader";
+    private const string ShaderAssetPath = "Packages/com.catandling.nontoon/Shaders/NonToon.scshader";
 
     public static void Run()
     {

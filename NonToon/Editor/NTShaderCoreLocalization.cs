@@ -173,7 +173,7 @@ msgstr ""编辑贴图""
         // 所以这里把 zh-Hans.po 复制成 <当前语言>.po（只在缺失时写，绝不覆盖）。
         private static bool EnsureOwnLanguageFiles(bool verbose)
         {
-            const string pkg = "Packages/jp.lilxyzw.nontoon";
+            const string pkg = "Packages/com.catandling.nontoon";
             var current = CurrentLanguage();
             if (string.IsNullOrEmpty(current)) return true;                       // 拿不到语言就什么都不做
             if (!current.StartsWith("zh", StringComparison.OrdinalIgnoreCase)) return true;  // 只处理中文

@@ -24,6 +24,23 @@ ROOT="$(pwd)"
 U="${U:-/c/Unity_File/2022.3.22f1/Editor/Unity.exe}"
 P="$ROOT/_verify-proj"
 RESULT="$ROOT/_notes/_verify-all.result"
+# ── [NT-FIX 38 / 2026-09-18] 并发锁 ─────────────────────────────────────────
+# 为什么需要：今天两次事故都是"两个 verify-all 同时抢 _verify-proj" ⇒ 后起的
+# Unity 崩在 HandleProjectAlreadyOpenInAnotherInstance（装置 A exit 21、无报告），
+# 而输出互相交错会让人误判成"代码回归"。
+# 替代做法是用【锁文件】而不是"按命令行文本找进程"—— 后者会匹配到自己，
+# 今天已经因此自杀过两次（模式出现在自己的命令行里）。
+LOCK="$ROOT/_notes/.verify-all.lock"
+if [ -e "$LOCK" ]; then
+  OLD=$(cat "$LOCK" 2>/dev/null || echo "")
+  if [ -n "$OLD" ] && kill -0 "$OLD" 2>/dev/null; then
+    echo "❌ 已有 verify-all 在跑（pid $OLD）—— 拒绝并发：两个 Unity 抢同一工程会让装置崩溃" >&2
+    exit 2
+  fi
+  echo "⚠️ 发现陈旧锁（pid $OLD 已不存在），清理后继续"
+fi
+echo $$ > "$LOCK"
+trap 'rm -f "$LOCK"' EXIT
 RUNID="$(date +%Y%m%d-%H%M%S)-$$"
 
 if [ ! -x "$U" ]; then echo "❌ 找不到 Unity: $U" >&2; exit 2; fi

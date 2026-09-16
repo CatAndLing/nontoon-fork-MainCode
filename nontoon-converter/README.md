@@ -4,7 +4,7 @@ lilToon → NonToon 材质转换器。作为 **NonToon (Fork)** 的**辅助包**
 
 ## 为什么单独一个包
 
-- 主着色包 `jp.lilxyzw.nontoon` 保持**纯库**：只有着色器 + 少量编辑器辅助（描边平滑、模块注册、渲染模式），
+- 主着色包 `com.catandling.nontoon` 保持**纯库**：只有着色器 + 少量编辑器辅助（描边平滑、模块注册、渲染模式），
   不掺工具代码、不掺 VRChat 相关逻辑
 - 转换器需要知道 VRChat 的概念（复制 avatar 时剥离 Blueprint ID），这类逻辑只应该待在工具包里
 - **本包不依赖 VRChat SDK**：`VRC.Core.PipelineManager` 通过反射访问，
@@ -20,7 +20,7 @@ lilToon → NonToon 材质转换器。作为 **NonToon (Fork)** 的**辅助包**
 https://catandling.github.io/VPM-nontoon-fork/vpm.json
 ```
 
-它会自动带上 `jp.lilxyzw.nontoon >= 0.1.11`
+它会自动带上 `com.catandling.nontoon >= 0.3.11`
 （**0.1.11 起转换器已从着色包移出**，两边不会重复注册菜单）。
 
 > 反向不成立：装着色包**不会**自动装本包 —— 转换器是可选的工具。

@@ -33,7 +33,7 @@ namespace LilToonToNonToonConverter
         {
             var shader = Shader.Find(shaderName);
             if (shader != null) return shader;
-            var path = "Packages/jp.lilxyzw.nontoon/Shaders/" + shaderName + ".scshader";
+            var path = "Packages/com.catandling.nontoon/Shaders/" + shaderName + ".scshader";
             AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
             return Shader.Find(shaderName);
         }
@@ -552,13 +552,13 @@ namespace LilToonToNonToonConverter
             }
 
             // 汉化：ShaderCore 的 lang/*.po 就是材质面板显示名的来源，直接查关键 key
-            CheckPoKeys("jp.lilxyzw.nontoon", "Shaders/lang/zh-Hans.po",
+            CheckPoKeys("com.catandling.nontoon", "Shaders/lang/zh-Hans.po",
                 new[] { "ZWrite", "Cull", "Outline Offset Factor", "Outline Ref", "ShadowColor", "Emission", "Copy", "From Shader" });
-            CheckPoKeys("jp.lilxyzw.nontoon", "Shaders/Modules/SelfLight/lang/zh-Hans.po",
+            CheckPoKeys("com.catandling.nontoon", "Shaders/Modules/SelfLight/lang/zh-Hans.po",
                 new[] { "PCSS Soft Shadow", "Shadow Distance", "Receive Mask", "Softness" });
-            CheckPoKeys("jp.lilxyzw.nontoon", "Shaders/Modules/ShadowColor/lang/zh-Hans.po",
+            CheckPoKeys("com.catandling.nontoon", "Shaders/Modules/ShadowColor/lang/zh-Hans.po",
                 new[] { "Use Shadow Masks", "Shadow Strength Mask", "Shadow Border Mask", "Shadow Blur Mask" });
-            CheckPoKeys("com.123cy321.nontoon-converter", "lang/zh-Hans.po",
+            CheckPoKeys("com.catandling.nontoon-converter", "lang/zh-Hans.po",
                 new[] { "Last conversion", "Converting lilToon materials" });
 
             Sb.AppendLine("  NTL10n.IsChinese = " + NTL10n.IsChinese + "（当前区域 " + System.Globalization.CultureInfo.CurrentCulture.Name + "）");

@@ -132,7 +132,7 @@ public static class NTBundleProbe
             var shader = Shader.Find(name);
             if (shader == null)
             {
-                AssetDatabase.ImportAsset("Packages/jp.lilxyzw.nontoon/Shaders/" + name + ".scshader", ImportAssetOptions.ForceUpdate);
+                AssetDatabase.ImportAsset("Packages/com.catandling.nontoon/Shaders/" + name + ".scshader", ImportAssetOptions.ForceUpdate);
                 shader = Shader.Find(name);
             }
             Check(shader != null && shader.name == name, "找到产品 shader " + name);

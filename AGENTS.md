@@ -127,8 +127,8 @@ NonToon = ShaderCore 着色器：13 个模块；phase_*.hlsl 被【文本拼接�
 
 | 路径 | 内容 |
 |---|---|
-| `NonToon/` | 着色器包（0.3.10）+ `SCOPE.md`（支持范围与已知限制） |
-| `nontoon-converter/` | Unity 编辑器转换器工具包（0.5.2） |
+| `NonToon/` | 着色器包（0.3.11）+ `SCOPE.md`（支持范围与已知限制） |
+| `nontoon-converter/` | Unity 编辑器转换器工具包（0.5.3） |
 | `tools/make-twopass.mjs` | 两趟透明变体的生成器（派生文件必须有可复现来源） |
 | `_notes/` | 笔记、探针、门禁脚本（**不进发布包、不进版本控制**） |
 | `_notes/probes/*.cs` | 8 台验证装置的探针本体 |

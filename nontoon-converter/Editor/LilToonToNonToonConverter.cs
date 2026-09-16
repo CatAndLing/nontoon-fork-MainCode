@@ -30,7 +30,7 @@ namespace LilToonToNonToonConverter
         internal const string NonToonShaderName = "NonToon";
         internal const string NonToonFurShaderName = "NonToonFur";
         // [NT-VENDOR] 期望版本随本分支更新（我们要求 NonToon ≥ 0.1.11、Shader Core ≥ 0.1.9）。
-        internal const string ExpectedNonToonVersion = "0.3.0";
+        internal const string ExpectedNonToonVersion = "0.3.11";
         internal const string ExpectedShaderCoreVersion = "0.1.9";
     }
 
@@ -121,7 +121,7 @@ namespace LilToonToNonToonConverter
         internal static Shader MainShader { get { return Shader.Find(ConverterConstants.NonToonShaderName); } }
         internal static Shader FurShader { get { return Shader.Find(ConverterConstants.NonToonFurShaderName); } }
         internal static bool IsInstalled { get { return MainShader != null && FurShader != null; } }
-        internal static string NonToonVersion { get { return InstalledVersion("jp.lilxyzw.nontoon"); } }
+        internal static string NonToonVersion { get { return InstalledVersion("com.catandling.nontoon"); } }
         internal static string ShaderCoreVersion { get { return InstalledVersion("jp.lilxyzw.shadercore"); } }
         internal static bool UsesSupportedVersions { get { return IsAtLeast(NonToonVersion, ConverterConstants.ExpectedNonToonVersion) && IsAtLeast(ShaderCoreVersion, ConverterConstants.ExpectedShaderCoreVersion); } }
 

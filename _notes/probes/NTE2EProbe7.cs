@@ -52,7 +52,7 @@ public static class NTE2EProbe7
         L("=== E2E 探针 v7 === " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
         var langDirs = new List<string>();
-        string pkg = "Packages/jp.lilxyzw.nontoon";
+        string pkg = "Packages/com.catandling.nontoon";
         langDirs.Add(pkg + "/Shaders/lang");
         foreach (var d in Directory.GetDirectories(pkg + "/Shaders/Modules"))
         {

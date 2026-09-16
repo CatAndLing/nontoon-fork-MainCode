@@ -38,8 +38,8 @@ namespace jp.lilxyzw.nontoon
 
         private static readonly string[] ShaderAssetPaths =
         {
-            "Packages/jp.lilxyzw.nontoon/Shaders/NonToon.scshader",
-            "Packages/jp.lilxyzw.nontoon/Shaders/NonToonFur.scshader",
+            "Packages/com.catandling.nontoon/Shaders/NonToon.scshader",
+            "Packages/com.catandling.nontoon/Shaders/NonToonFur.scshader",
         };
 
         private static readonly Regex REG_SHADERNAME = new(@"^\s*-\s*shadername:\s*(\S+)\s*$");

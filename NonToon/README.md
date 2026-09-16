@@ -4,7 +4,7 @@ NonToon (Fork)
 > **简体中文说明（本分支 0.3.0）**
 >
 > 这是 [lilxyzw/NonToon](https://github.com/lilxyzw/NonToon) 的 **fork**，包 id 与官方相同
-> （`jp.lilxyzw.nontoon`），所以安装时是**升级**官方版而不是并存。
+> （`com.catandling.nontoon`），所以安装时是**升级**官方版而不是并存。
 > 仓库与一键添加地址：<https://catandling.github.io/VPM-nontoon-fork/>
 >
 > **相对官方 0.1.3 的主要差异**
@@ -19,9 +19,9 @@ NonToon (Fork)
 >   `_ShadowBorderMask`（`.rgb` = 第 1/2/3 层）/ `_ShadowBlurMask`（`.rgb` = 第 1/2/3 层），
 >   默认关闭时零采样
 > - **界面全中文**：材质面板的属性名/提示/模块标题/枚举标签/ShaderLab 渲染与模板属性，以及配套工具包
->   （`com.123cy321.nontoon-converter`）的窗口 / 报告 / 日志
+>   （`com.catandling.nontoon-converter`）的窗口 / 报告 / 日志
 >
-> 材质转换器与 SelfLight 烘焙器在**配套工具包** `com.123cy321.nontoon-converter` 里
+> 材质转换器与 SelfLight 烘焙器在**配套工具包** `com.catandling.nontoon-converter` 里
 > （本包保持"纯着色器库"）。用法与注意事项见该包内的 `README.md` / `Mapping.md` / `SelfLight.md`。
 
 ---

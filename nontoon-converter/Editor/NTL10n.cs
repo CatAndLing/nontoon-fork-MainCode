@@ -117,7 +117,7 @@ namespace LilToonToNonToonConverter
             catch { }
 
             // 3) 兜底：固定包名
-            paths.Add(Path.Combine(Application.dataPath, "..", "Packages", "com.123cy321.nontoon-converter", "lang", "zh-Hans.po"));
+            paths.Add(Path.Combine(Application.dataPath, "..", "Packages", "com.catandling.nontoon-converter", "lang", "zh-Hans.po"));
             return paths;
         }
 

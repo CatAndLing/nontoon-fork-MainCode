@@ -21,9 +21,11 @@ if [ ! -d "$SRC" ]; then
 fi
 
 # 1) 包目录：先删后拷
-rm -rf "$PKG/jp.lilxyzw.nontoon" "$PKG/com.123cy321.nontoon-converter"
-cp -a "$ROOT/NonToon" "$PKG/jp.lilxyzw.nontoon"
-cp -a "$ROOT/nontoon-converter" "$PKG/com.123cy321.nontoon-converter"
+# 清掉旧身份的副本，避免同 GUID / 同程序集的两套包同时导入。
+rm -rf "$PKG/jp.lilxyzw.nontoon" "$PKG/com.123cy321.nontoon-converter" \
+       "$PKG/com.catandling.nontoon" "$PKG/com.catandling.nontoon-converter"
+cp -a "$ROOT/NonToon" "$PKG/com.catandling.nontoon"
+cp -a "$ROOT/nontoon-converter" "$PKG/com.catandling.nontoon-converter"
 
 # 2) 探针：从归档铺进去（缺一个就失败，避免"探针没部署 → 什么都没测 → 却报通过"）
 mkdir -p "$ASSETS"
@@ -53,7 +55,7 @@ copy_probe NTSelfLitShadowProbe.cs "$ASSETS"   # ④ 自带光照与阴影：虚
 # NTMaProbe 只有在工程里装了真实 MA + NDMF 时才有意义（见 项目状态与交接.md §6 的搭建方法），
 # 所以**不随 sync-verify 自动部署**，用的时候手工 cp 进 Assets/Editor。
 # NTConverterProbe 必须放在包内（同程序集才能访问 internal 类型）
-copy_probe NTConverterProbe.cs "$PKG/com.123cy321.nontoon-converter/Editor"
+copy_probe NTConverterProbe.cs "$PKG/com.catandling.nontoon-converter/Editor"
 
 # 归档但**不部署**的（属于 _e2e-proj 或一次性实验，见 _notes/evidence/README.md）：
 #   NTE2EProbe3/6/7.cs（端到端装置 E）、NTExitProbe.cs（退出码实验）、
@@ -61,8 +63,8 @@ copy_probe NTConverterProbe.cs "$PKG/com.123cy321.nontoon-converter/Editor"
 
 # 3) 报数（数量只作参考，判据是各探针的退出码）
 echo "synced:"
-echo "  NonToon   -> $(find "$PKG/jp.lilxyzw.nontoon" -type f | wc -l) files"
-echo "  converter -> $(find "$PKG/com.123cy321.nontoon-converter" -type f | wc -l) files"
+echo "  NonToon   -> $(find "$PKG/com.catandling.nontoon" -type f | wc -l) files"
+echo "  converter -> $(find "$PKG/com.catandling.nontoon-converter" -type f | wc -l) files"
 echo "  probes    -> $(ls -1 "$SRC"/*.cs | wc -l) 个归档探针"
 echo
 echo "⚠️  注意：探针现在会 exit 非 0。发版时必须检查退出码，不要只看 txt 里的「全部通过」。"
