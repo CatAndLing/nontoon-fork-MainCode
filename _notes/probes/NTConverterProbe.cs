@@ -112,9 +112,29 @@ namespace LilToonToNonToonConverter
                 RunSelfLightBakeCase();
 
                 Sb.AppendLine();
-                Sb.AppendLine("== 自诊断（没装 lilToon 时要说清楚，并列出实际看到的着色器） ==");
-                Sb.AppendLine("  LilToonCompatibility.AnyLilToon = " + LilToonCompatibility.AnyLilToon + "（验证工程没装 lilToon，应为 False）");
-                Check("lilToon 在位检测工作正常", !LilToonCompatibility.AnyLilToon, LilToonCompatibility.AnyLilToon.ToString());
+                Sb.AppendLine("== 自诊断（lilToon 在不在都要说清楚，并列出实际看到的着色器） ==");
+                // ⚠️ 这里原先写死 `!AnyLilToon`（假设验证工程**没装** lilToon）。
+                // 2026-09-18 全盘门禁抓到它变红，而**不是产品回归**：上一轮全绿时该断言是
+                // `→ False`，本轮 AnyLilToon=True —— 因为 MA 批做装置 F 时把依赖复制进了
+                // `_verify-proj`，连带装上了 `jp.lilxyzw.liltoon`（`sync-verify.sh` 只管我们自己的
+                // 两个包，**不管第三方**⇒ 测试床会漂移）。
+                // ⇒ 断言的语义应是"**检测结果与实际安装情况一致**"（这才是它的名字所声称的），
+                //    而不是"必须没装"。这样它在两种测试床上都成立，且**更强**（验的是机制而非环境）。
+                var lilToonPkg = UnityEditor.PackageManager.PackageInfo.FindForAssetPath("Packages/jp.lilxyzw.liltoon/package.json");
+                var lilToonInstalled = lilToonPkg != null;
+                Sb.AppendLine("  LilToonCompatibility.AnyLilToon = " + LilToonCompatibility.AnyLilToon
+                    + "（实际安装 " + (lilToonInstalled ? "有" : "无") + " lilToon）");
+                Check("lilToon 在位检测与实际安装一致", LilToonCompatibility.AnyLilToon == lilToonInstalled,
+                    "AnyLilToon=" + LilToonCompatibility.AnyLilToon + " / 实际安装=" + lilToonInstalled);
+                // 测试床成分**写进报告**：否则第三方包的增删会静默改变结论（本次就是这样被发现的）
+                {
+                    var names = new[] { "jp.lilxyzw.liltoon", "nadena.dev.modular-avatar", "nadena.dev.ndmf",
+                                        "com.anatawa12.avatar-optimizer", "com.vrchat.avatars", "jp.lilxyzw.shadercore" };
+                    var present = new List<string>();
+                    foreach (var n in names)
+                        if (UnityEditor.PackageManager.PackageInfo.FindForAssetPath("Packages/" + n + "/package.json") != null) present.Add(n);
+                    Sb.AppendLine("  测试床（第三方，sync-verify 不管）：" + (present.Count > 0 ? string.Join(" / ", present) : "（无）"));
+                }
                 var standardMaterial = new Material(Shader.Find("Standard"));
                 var lilToonShapedMaterial = new Material(AssetDatabase.LoadAssetAtPath<Shader>(ShaderPath));
                 var describe = typeof(LilToonToNonToonConverterWindow).GetMethod("DescribeFoundShaders", BindingFlags.NonPublic | BindingFlags.Static);
