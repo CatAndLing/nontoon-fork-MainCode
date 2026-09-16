@@ -160,10 +160,16 @@ namespace LilToonToNonToonConverter
 
     internal static class LilToonMaterialConverter
     {
+        // [NT-FIX 35 / 2026-09-18] 措辞修正：这条通用警告**只在** `_UseGlitter`/`_UseEmission2nd`/`_UseParallax`
+        //   任一为真时触发，而真实素材实测（辉夜 + 虎尾，49 个 lilToon 材质）这三个开关**全为 0/47**
+        //   ⇒ 本工程里它一次都不会触发。反过来，**频率最高的几项缺失**
+        //   （环境反射 24/49、描边贴图 22/49、受光描边 15/49、Gem/Refraction 2/49）
+        //   以前**一条提示都没有**，现在各自有专门且可定位的警告。
+        //   ⇒ 这条文案只负责"确实开了这些开关"的那批材质，不再笼统地宣称覆盖一切。
         private static readonly string[] UnsupportedFeatures =
         {
-            "Decals, dissolve, glitter, refraction, gem, audio link and animated UVs are not reproduced.",
-            "NonToon does not provide a one-to-one equivalent for all lilToon shadow, emission, and fur parameters. Review converted materials visually."
+            "Glitter, parallax/POM, decals, dissolve, audio link and animated UVs are not reproduced.",
+            "NonToon does not provide a one-to-one equivalent for every lilToon shadow, emission and fur parameter. Review converted materials visually."
         };
 
         internal static bool IsLilToon(Material material)
@@ -217,7 +223,7 @@ namespace LilToonToNonToonConverter
                 if (isFur) CopyFur(source, target, entry);
                 // Creating/importing baked textures and .scgradients can refresh a material's
                 // integer keyword-like values. Apply module switches after those imports.
-                ReapplyModuleEnables(source, target);
+                ReapplyModuleEnables(source, target, entry);
                 CopyRenderState(source, target, isFur, entry);
                 ReportUnsupportedFeatures(source, entry);
 
@@ -227,7 +233,7 @@ namespace LilToonToNonToonConverter
                 // CreateAsset may initialize integer-backed Shader Core module properties.
                 // Apply the enable keywords once more after the material is an asset, then
                 // capture diagnostics from the actual generated material state.
-                ReapplyModuleEnables(source, target);
+                ReapplyModuleEnables(source, target, entry);
                 EditorUtility.SetDirty(target);
                 ConversionDiagnostics.Capture(source, target, entry);
                 // [NT-L10N] 以前这里是嗅探英文前缀 "WARNING"/"MISSING MODULE"。
@@ -546,9 +552,15 @@ namespace LilToonToNonToonConverter
 
         private static void CopySpecular(Material source, Material target, ConversionEntry entry)
         {
+            // ⛔ [NT-FIX 35b / 2026-09-18] 环境反射的报警必须放在**所有** early-return 之前。
+            //    第一版我把它放在"镜面未启用"那个 return 之前，却漏掉了**更早**的这个
+            //    `specularColor == null` ⇒ 目标没有 Specular 模块时，警告依然不会执行
+            //    （审计第 7 轮 a 抓到；我先前的注释还声称"必须在 early-return 之前"，实为空话）。
+            var reflectionEnabled = IsEnabled(source, "_UseReflection");
+            WarnEnvironmentReflection(source, reflectionEnabled, entry);
+
             var specularColor = ModuleProperty(target, "specular", "SpecularColor");
             if (specularColor == null) { entry.Warn(NTL10n.L("MISSING MODULE Specular: reflection/specular was not converted.")); return; }
-            var reflectionEnabled = IsEnabled(source, "_UseReflection");
             var applySpecular = !source.HasProperty("_ApplySpecular") || IsEnabled(source, "_ApplySpecular");
             if (!ShouldCopySpecular(reflectionEnabled, applySpecular))
             {
@@ -564,7 +576,33 @@ namespace LilToonToNonToonConverter
             // lilToon's reflection color is independent of the base albedo by default.
             SetNumber(target, ModuleProperty(target, "specular", "SpecularMultiplyAlbedo"), 0f);
             SetInteger(target, ModuleProperty(target, "specular", "SpecularMaskChannel"), 3);
-            entry.Messages.Add(NTL10n.L("Mapped lilToon Reflection color to NonToon Specular; Smoothness is mapped to Roughness."));
+            // [NT-FIX 35 / 2026-09-18] 措辞修正：只映了**直接光镜面高光**，不要说成"反射已转换"。
+            entry.Messages.Add(NTL10n.L("Mapped lilToon reflection colour to NonToon Specular (direct-light specular only); Smoothness is mapped to Roughness."));
+        }
+
+        // [NT-FIX 35 / 2026-09-18] 环境反射：**NonToon 完全没有对应物，而以前这里一声不吭。**
+        //
+        // 实测依据：对 NonToon 全部着色器 `grep "Reflect|Cubemap|_EnvRim|Reflection"` = **零命中**
+        // ⇒ 它没有任何 cubemap / probe 反射代码。而 lilToon 的 `_UseReflection` 覆盖两件不同的事：
+        //   ① 直接光镜面高光（映到 Specular）
+        //   ② **环境反射**（`_Reflectance` 强度 + `_ApplyReflection` 是否把 cubemap 结果混进最终色）
+        // 真实素材实测（辉夜 + 虎尾，49 个 lilToon 材质）：
+        //   `_UseReflection` 开着 = **24 个（51%）**、`_Reflectance` 非默认 = **17 个**
+        //   ⇒ 这是**频率第二高**的能力缺失，而且以前**没有任何提示**（与 [NT-FIX 30] 同类故障）。
+        // 判据故意保守：只有"确实启用了环境反射"（强度 > 0 或 `_ApplyReflection` 开）才报警，
+        // 免得给 `_Reflectance=0` 的材质白报一条。
+        private static void WarnEnvironmentReflection(Material source, bool reflectionEnabled, ConversionEntry entry)
+        {
+            if (!reflectionEnabled) return;
+            var envReflectance = GetFloat(source, "_Reflectance", 0f);
+            var envApplied = source.HasProperty("_ApplyReflection") && IsEnabled(source, "_ApplyReflection");
+            if (envReflectance > 0.001f || envApplied)
+                // ⚠️ [NT-FIX 35b] 措辞按审计第 7 轮 a 收紧：**不得**再声明"只有直接光镜面被映了" ——
+                //    `_ApplySpecular=0` 或目标缺 Specular 时根本没有映。这里只陈述**确定的**那一件事
+                //    （环境反射没有对应物、源设置未被转换），镜面的成败由后续分支各自报告。
+                entry.Warn(NTL10n.F(
+                    "WARNING: NonToon has no cubemap/probe environment reflection; the source environment reflection settings were not converted. Affected source inputs: Reflectance={0}, Apply Reflection={1}.",
+                    envReflectance.ToString("F3"), envApplied ? "on" : "off"));
         }
 
         internal static bool ShouldCopySpecular(bool reflectionEnabled, bool applySpecular)
@@ -698,29 +736,43 @@ namespace LilToonToNonToonConverter
                 entry.Warn(NTL10n.L("WARNING: NonToon Distance Fade fades to black camera depth only; lilToon fade color, object-depth mode, and rim fade are not equivalent."));
         }
 
-        // [NT-FIX 28] **阴影默认走上游的 Shade 梯度 ramp**（= 原版 NonToon 的行为）。
-        // 只有 ramp 不可用（目标没有 Shade 模块）时才回退到本 fork 的 ShadowColor 模块。
-        // 为什么把优先级翻过来：见 `CopyColorRamps` 里 [NT-FIX 28] 的长注释。
+        // [NT-FIX 33 / 2026-09-18] **阴影默认走本 fork 的 ShadowColor 模块**（= lilToon 阴影的逐行忠实移植）。
+        // 只有目标没有 ShadowColor 模块时才回退到上游的 Shade 梯度 ramp。
+        //
+        // ⛔ 这里在 [NT-FIX 28]（2026-09-17）被翻成"优先上游 ramp"，本轮**翻回来**。依据
+        //    （`_notes/素材扫描-范围锁定.md` §6.4，全部为直读源码 + 真实素材实测）：
+        //      · `ShadowColor/phase_shade.hlsl` 是 lilToon 阴影的**逐行忠实移植**，承载
+        //        `_ShadowBorderColor`(本库 44/49 用到) / `_ShadowBorderRange`(22) /
+        //        `_ShadowMainStrength`(13) / 逐像素遮罩 / `fwidth` 抗锯齿 / `min(indirect,albedo)`；
+        //      · 该文件 `:86-88` 自己写明：ramp 关闭是「**the normal configuration when using
+        //        shadow colours instead of a ramp**」⇒ fork 原本的设计配置就是这个；
+        //      · 上游 Shade **ramp** 是**一维颜色查找**，结构上：① 承载不了 `fwidth` 抗锯齿
+        //        （依赖屏幕导数）；② 烘焙器只建模了 lns.x/.y/.z 三层色带，**没有把
+        //        `lnB × _ShadowBorderColor` 渐变项烘进去**（`lnB` 是唯一用 `_ShadowBorderRange` 的项）
+        //        ⇒ 那 4 项在 ramp 路径下**全部 inert**；
+        //      · `[NT-FIX 28]` 当初的理由（消除泛紫泛红）**已由别的补丁达成，而那些补丁本身是错的**
+        //        —— 见 `CopyShadowColourNative` 里 [NT-FIX 33] 的说明。
         private static void CopyShade(Material source, Material target, ConversionEntry entry)
         {
             if (!IsEnabled(source, "_UseShadow")) return;
 
+            // 首选：本 fork 的 ShadowColor 模块（属性名与 lilToon 逐字符相同，1:1 承载）
+            if (target.HasProperty("_ShadowColorEnable"))
+            {
+                CopyShadowColourNative(source, target, entry);
+                return;
+            }
+
+            // 回退：上游的 Shade 梯度 ramp（会丢失上面列出的 4 项，如实报警）
             var sdfType = ModuleProperty(target, "shade", "SDFType");
             if (sdfType != null)
             {
-                // 上游路径：ramp 本身由 `CopyColorRamps` 烘焙并写入 `_ShadeGradientIndex`，
+                // ramp 本身由 `CopyColorRamps` 烘焙并写入 `_ShadeGradientIndex`，
                 // 这里只负责把 SDF 与取值范围设成"无 SDF、0..1 全范围"。
                 SetInteger(target, sdfType, 0);
                 var shadeRange = ModuleProperty(target, "shade", "ShadeGradientRange");
                 if (shadeRange != null) target.SetVector(shadeRange, new Vector4(0f, 1f, 0f, 0f));
-                entry.Messages.Add(NTL10n.L("Shadow uses NonToon's own Shade gradient ramp (upstream behaviour, no fork-specific module)."));
-                return;
-            }
-
-            // 回退：本 fork 的 ShadowColor 模块（属性名与 lilToon 一致，可 1:1 承载 border/blur/strength/2nd/3rd）
-            if (target.HasProperty("_ShadowColorEnable"))
-            {
-                CopyShadowColourNative(source, target, entry);
+                entry.Warn(NTL10n.L("WARNING: the installed NonToon shader has no ShadowColor module, so the shadow fell back to the Shade gradient ramp. A 1D ramp cannot carry lilToon Border Range, Contrast (Shadow Main Strength), Border Color, per-pixel shadow masks or screen-derivative antialiasing; those were not converted."));
                 return;
             }
 
@@ -737,6 +789,13 @@ namespace LilToonToNonToonConverter
             SetNumber(target, "_ShadowColorEnable", 1f);
 
             // [NT-FIX 26] 阴影**本体颜色**必须去色偏，不能照搬。
+            //
+            // ⚠️ [NT-FIX 33] 复核后**保留本补丁**（曾一度想撤，已收回）。原因：它与 MA 菜单耦合 ——
+            //    `NT_ShadowStrength` 的**默认值是 1**（三点/两点 BlendTree：t=0→0.00 / t=1→1.00），
+            //    ⇒ **VRChat 里 `_ShadowStrength` 一律被驱动到 1.0**，而 lilToon 作者设的是 **0.10**。
+            //    所以"粉色被放大"的真正来源是**菜单默认值**，不是本补丁。
+            //    在菜单仍强制 1.0 的前提下撤掉中性化 ⇒ 会得到**强粉阴影**（正是用户抱怨过的观感）。
+            //    ⇒ 先解决菜单默认值（那是另一项决定），再谈是否恢复作者的色彩。
             //
             // 为什么：`ShadowColor/phase_shade.hlsl:104` 是
             //     ntSIndirect = lerp(albedo, shadowColorTex.rgb, tex.a) * **_ShadowColor.rgb**
@@ -764,6 +823,10 @@ namespace LilToonToNonToonConverter
             }
 
             // [NT-FIX 22] `_ShadowBorderColor`（影的**边界色**）单独处理，不能照搬。
+            //
+            // ⚠️ [NT-FIX 33] 复核后**保留本补丁**（同 [NT-FIX 26]：与菜单 `NT_ShadowStrength` 默认 1
+            //    ⇒ VRChat 里 `_ShadowStrength` = 1.0 耦合；在 1.0 下 lilToon 的默认 `(1,0.1,0)`
+            //    会画出明显的红边界）。撤掉它必须先解决菜单默认值。
             //
             // 为什么：`ShadowColor/phase_shade.hlsl:121` 是**逐通道**权重
             //     ntSIndirect = lerp(ntSIndirect, ntSAlbedo, ntSLitW * _ShadowBorderColor.rgb);
@@ -827,10 +890,29 @@ namespace LilToonToNonToonConverter
             }
 
             // ⚠️ **只有走本回退路径**（用 ShadowColor 模块承载阴影）时才关掉 Shade 的 Ramp，
-            //    避免两者都乘 albedo 而叠加。默认（上游 ramp）路径**不会**执行到这里
-            //    —— 见 [NT-FIX 28]：`CopyShade` 优先走上游 ramp。
+            //    避免两者都乘 albedo 而叠加。
             var shadeGradientIndex = ModuleProperty(target, "shade", "ShadeGradientIndex");
             if (shadeGradientIndex != null) SetInteger(target, shadeGradientIndex, -1);
+
+            // [NT-FIX 36 / 2026-09-18] 两个**确定无法转换**的 lilToon 阴影参数，如实报警而不是静默丢弃。
+            //   （审计第 7 轮 b 指出，我逐条核对了真实用法后才写进来。）
+            //   · `_BackfaceForceShadow`：lilToon 用 `fd.facing < 0` 判背面并强制阴影
+            //     （`lil_common_frag.hlsl:1038 / :1156`：`lns.x/.y/.w/.z *= bfshadow`）。
+            //     ⛔ **NonToon 的 `sd` 里没有 facing 等价字段**（全仓 grep "facing" 只命中一处注释）
+            //     ⇒ 按审计的忠告**不猜**，如实报"未转换"。
+            //   · `_ShadowReceive`：控制是否接收主光阴影，模块未实现。
+            // 实测本库：`_BackfaceForceShadow` 非默认 **6/49**、`_ShadowReceive` **1/49**。
+            // ⚪ 它另外点名的 `_ShadowEnvStrength` / `_ShadowAOShift` / `_ShadowMaskType`
+            //     在本库**全部是默认值**：默认下 `saturate(indLightColor * 0) = 0` ⇒ lerp 权重 0 = no-op；
+            //     AO/MaskType 分支都要求**未被指定**的遮罩贴图 ⇒ 整支关闭。**不报警，避免噪音。**
+            var backfaceForce = GetFloat(source, "_BackfaceForceShadow", 0f);
+            if (backfaceForce > 0.001f)
+                entry.Warn(NTL10n.F("WARNING: lilToon Backface Force Shadow {0} was not converted - NonToon's shading data has no back-face flag equivalent, so back-facing polygons are not forced into shadow.",
+                    backfaceForce.ToString("F3")));
+            var shadowReceive = GetFloat(source, "_ShadowReceive", 1f);
+            if (shadowReceive < 0.999f)
+                entry.Warn(NTL10n.F("WARNING: lilToon Shadow Receive {0} was not converted - NonToon always receives the main light shadow.",
+                    shadowReceive.ToString("F3")));
 
             entry.Messages.Add(NTL10n.L("Copied lilToon shadow settings to NonToon's native ShadowColor module (border/blur/strength/2nd/3rd/border colour preserved 1:1) and disabled the Shade ramp to avoid stacking."));
         }
@@ -902,16 +984,14 @@ namespace LilToonToNonToonConverter
             var shadeGradientIndex = ModuleProperty(target, "shade", "ShadeGradientIndex");
             var rimShadeGradientIndex = ModuleProperty(target, "rimshade", "RimShadeGradientIndex");
             var hairSpecularGradientIndex = ModuleProperty(target, "hairspecular", "HairSpecularGradientIndex");
-            // [NT-FIX 28] 阴影**优先走上游的 Shade 梯度 ramp**（= 原版 NonToon 的行为）。
-            //
-            // ⛔ 这里原来是 `… && !target.HasProperty("_ShadowColorEnable")` —— 即"只要目标有
-            //    ShadowColor 模块就跳过 ramp，改用我们自研的 ShadowColor 模块"。那是**错误的方向**
-            //    （2026-09-17 用户明确指出：「没开阴影开关应该由着色器全权接管，和 nontoon 原版一样」）：
-            //      · 阴影强度变成 fork 私有语义（`_ShadowStrength` 只有 0.1/0.29 ⇒ 完全没层次）
-            //      · `_ShadowColor`/`_ShadowBorderColor` 是**逐通道相乘** ⇒ 粉/红一定会被放大（泛红）
-            //      · 关掉 ⑥ 之后材质行为与上游不一致 ⇒ 用户以为"开关没生效"
-            //    ⇒ 现在**默认走 ramp**；ShadowColor 模块只在 ramp 不可用时回退（见 `CopyShade`）。
-            var hasShadow = IsEnabled(source, "_UseShadow") && shadeGradientIndex != null;
+            // [NT-FIX 33 / 2026-09-18] 有 ShadowColor 模块时**不烘 shade ramp** —— 否则 `CopyColorRamps`
+            // （本函数在 `CopyShade` **之后**调用，:417 → :418）会把 `CopyShadowColourNative` 刚写下的
+            // `_ShadeGradientIndex = -1` **覆盖**成一条烘焙出来的 ramp，于是 Shade 与 ShadowColor
+            // **两条路径同时活着**：Shade 先算，ShadowColor 再整段赋值覆盖（`phase_shade.hlsl:124`）
+            // ⇒ ramp 白烘、且 `_SharedGradients` 多出一张无用的图。
+            // 这条 `&& !HasProperty(...)` 在 [NT-FIX 28] 里被删掉过，本轮恢复（这次理由与上次相反，见 `CopyShade`）。
+            var hasShadow = IsEnabled(source, "_UseShadow") && shadeGradientIndex != null
+                && !target.HasProperty("_ShadowColorEnable");
             var hasRimShade = IsEnabled(source, "_UseRimShade") && rimShadeGradientIndex != null;
             var hasHairSpecular = IsEnabled(source, "_UseAnisotropy") && hairSpecularGradientIndex != null;
             if (!hasShadow && !hasRimShade && !hasHairSpecular) return;
@@ -982,7 +1062,7 @@ namespace LilToonToNonToonConverter
             }
         }
 
-        private static void ReapplyModuleEnables(Material source, Material target)
+        private static void ReapplyModuleEnables(Material source, Material target, ConversionEntry entry)
         {
             var detailsEnable = ModuleProperty(target, "details", "Enable");
             if (detailsEnable != null && (GetTexture(source, "_BumpMap") != null ||
@@ -997,22 +1077,31 @@ namespace LilToonToNonToonConverter
             // **之前与之后各调用一次**，而 CreateAsset 会把整数型属性初始化回默认值。
             // 又因为该模块 keepPropertyNames，属性名就是 _ShadowColorEnable（不能用 ModuleProperty 拼）。
             //
-            // ⛔⛔ [NT-FIX 30 / 2026-09-17] **这里原来是 `IsEnabled(source, "_UseShadow")` 无条件置 1，
-            //    那会把 [NT-FIX 28]「阴影优先走上游 Shade 梯度 ramp」整个作废 —— 而且是静默作废：**
-            //      · `ShadowColor/phase_shade.hlsl` 自己写明（该文件 :13-16）：按模块名排序
-            //        `"Shade" < "ShadowColor"` ⇒ 本模块**排在 Shade 之后**执行；
-            //      · 它末尾 `:124` 是 `sd.col.rgb = lerp(ntSIndirect, ntSAlbedo, ntSLit1);`
-            //        —— **赋值，不是相乘** ⇒ 把 ramp 刚算出来的结果**整个覆盖掉**。
-            //    ⇒ 只要源材质开着 `_UseShadow`，转换器的日志照样打印
-            //      "Shadow uses NonToon's own Shade gradient ramp"，但**画面上跑的是 ShadowColor**。
-            //      典型"日志说对了、画面没变"的故障（这就是 [NT-FIX 28] 一直没被目视验证的原因）。
-            //    判据必须与 `CopyShade`(:708) **逐字一致**：目标能解析出上游 Shade 模块的
-            //    `SDFType` ⇒ 走 ramp ⇒ ShadowColor 必须**关**。
+            // [NT-FIX 33 / 2026-09-18] 判据**反转**，与 `CopyShade`(:717) 保持一致：
+            //    有 ShadowColor 模块 ⇒ **开它**，并把 Shade 的 `_ShadeGradientIndex` 钉成 **-1**
+            //    （两条路径都会整段赋值 `sd.col.rgb`，同时活着则 ShadowColor 覆盖 Shade ⇒ ramp 白烘）。
+            //    没有 ShadowColor 模块 ⇒ 关它，阴影交给上游 Shade ramp（`CopyColorRamps` 烘）。
             if (target.HasProperty("_ShadowColorEnable"))
             {
-                var shadeRampAvailable = ModuleProperty(target, "shade", "SDFType") != null;
-                var wantShadowColor = IsEnabled(source, "_UseShadow") && !shadeRampAvailable;
+                var wantShadowColor = IsEnabled(source, "_UseShadow");
                 SetNumber(target, "_ShadowColorEnable", wantShadowColor ? 1f : 0f);
+                // [NT-FIX 35b / 审计第 7 轮 a] ⚠️ **源没开阴影时也要钉 -1**。
+                // 原来只在 wantShadowColor 为真时钉 ⇒ 若目标模板 / 复用资产（OverwriteExisting）
+                // 里残留一个合法的 `_ShadeGradientIndex`，`_UseShadow = 0` 的材质**照样会走
+                // Shade ramp 着色** —— 与"源关闭了阴影"矛盾。这不是"双开"，而是**漏接管**：
+                // 转换器既然全权接管阴影状态，就应该把两条路径都关干净。
+                // ⚠️ 必须在 CreateAsset **之后**也重放：整数型属性会被 CreateAsset 复位。
+                var shadeIdx = ModuleProperty(target, "shade", "ShadeGradientIndex");
+                if (shadeIdx != null)
+                {
+                    SetInteger(target, shadeIdx, -1);
+                }
+                else if (ModuleProperty(target, "shade", "SDFType") != null)
+                {
+                    // [NT-FIX 35b] Shade 模块**存在**却解析不出索引 ⇒ 互斥无法保证。
+                    // 审计要求把这种"静默跳过"变成可见诊断 —— 否则又是一个"够不到的判据"。
+                    entry.Warn(NTL10n.L("WARNING: the Shade module is present but its Shade Gradient Index property could not be resolved, so the Shade ramp and the ShadowColor module cannot be guaranteed to be mutually exclusive. Check the converted material for doubled shading."));
+                }
             }
 
             // [NT-VENDOR] Emission 模块同理：本函数在 CreateAsset 前后各调用一次，
@@ -1129,8 +1218,19 @@ namespace LilToonToNonToonConverter
             if (source.HasProperty("_Cull")) SetNumber(target, "_Cull", source.GetFloat("_Cull"));
             CopyFloat(source, "_ZWrite", target, "_ZWrite");
             entry.Messages.Add(NTL10n.F("Mapped lilToon rendering mode to NonToon {0}.", NTL10n.L(targetMode == 0 ? "Opaque" : targetMode == 1 ? "Cutout" : "Transparent")));
-            if (transparentMode >= 3)
-                entry.Warn(NTL10n.L("WARNING: lilToon transparent/refraction/gem rendering is approximated as NonToon transparent."));
+            // [NT-FIX 34 / 2026-09-18] 判据修正：**只看 `transparentMode >= 3` 永远不触发**。
+            //
+            // 为什么：专用变体材质（`Hidden/lilToonGem` / `Hidden/lilToonRefraction*`）把模式**编在着色器名里**，
+            // 它们的 `_TransparentMode` **属性本来就是 0**（从未被更新）⇒ 判据恒为假。
+            // 实测（辉夜）：`tail_Crystal.mat` 是 `Hidden/lilToonGem`、属性 0 ⇒ 转换 severity = **Success**，
+            // **一个警告都没有**，而它其实被近似成了普通透明 —— Gem 的折射/色散全部丢失。
+            // 与 `[NT-FIX 30]` 同类：**能解析出正确结论，却写了一个够不到的判据。**
+            var isGemOrRefraction = transparentMode >= 3
+                || shaderName.Contains("gem")
+                || shaderName.Contains("refraction")
+                || IsEnabled(source, "_UseRefraction");
+            if (isGemOrRefraction)
+                entry.Warn(NTL10n.L("WARNING: lilToon gem/refraction rendering is approximated as NonToon transparent; gem distortion, fresnel and chromatic aberration are not reproduced."));
         }
 
         private static void ApplyNonToonRenderState(Material target, int mode)
