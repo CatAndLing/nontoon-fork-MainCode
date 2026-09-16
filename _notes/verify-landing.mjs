@@ -111,10 +111,15 @@ try {
   const srcNt = JSON.parse(fs.readFileSync(new URL('NonToon/package.json', srcDir), 'utf8')).version;
   const srcCv = JSON.parse(fs.readFileSync(new URL('nontoon-converter/package.json', srcDir), 'utf8')).version;
   const nameOk = j.packages?.['com.catandling.nontoon']?.versions?.[ntVer]?.displayName === 'NonToon (Fork)';
-  // 每条判据都能单独失败：id 集合恰好两个新身份 / 线上版本 == 源码版本 / displayName 正确
+  // 仓库 id：2026-09-18 由 io.github.123cy321.vpm 改为 io.github.catandling.vpm（摆脱旧账号名）。
+  // 单独断言 —— 这类"身份漂移"正是本仓库刚犯过一次的错，加一道闸免得再犯。
+  const REPO_ID = 'io.github.catandling.vpm';
+  const repoIdOk = j.id === REPO_ID;
+  // 每条判据都能单独失败：仓库 id / 包 id 集合恰好两个新身份 / 线上版本 == 源码版本 / displayName 正确
   listingOk = ids.length === EXPECT.length && EXPECT.every((k) => ids.includes(k))
-    && ntVer === srcNt && cvVer === srcCv && nameOk;
-  listingName = `ids=[${ids.join(', ')}] nontoon=${ntVer}(源码 ${srcNt}) converter=${cvVer}(源码 ${srcCv})`
+    && ntVer === srcNt && cvVer === srcCv && nameOk && repoIdOk;
+  listingName = `仓库 id=${j.id}${repoIdOk ? '' : '（应为 ' + REPO_ID + '）'} ids=[${ids.join(', ')}]`
+    + ` nontoon=${ntVer}(源码 ${srcNt}) converter=${cvVer}(源码 ${srcCv})`
     + ` displayName=${nameOk ? 'ok' : 'BAD'}`;
 } catch (e) { listingName = 'parse error: ' + e.message; }
 if (listingOk) console.log(`  HTTP ${r.status}, ${listingName}: ✓`); else bad(`listing 异常（${listingName}）`);
