@@ -66,3 +66,12 @@ msgstr "被锁定的属性无法被子级覆盖。"
 
 msgid "This property is set and locked by an ancestor."
 msgstr "该属性由父级设置并锁定。"
+
+msgid "Shadow Sharpen"
+msgstr "阴影锐化"
+
+msgid "Ambient Tint Amount"
+msgstr "环境光染色强度"
+
+msgid "Ambient Tint"
+msgstr "环境光染色"

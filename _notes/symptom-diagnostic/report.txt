@@ -1,0 +1,26 @@
+UTC=2026-09-16T23:10:26.8453224Z run=2002f330-c636-4935-a3b2-b94e57ca631c
+Unity=2022.3.22f1 GPU=Direct3D11 color=Linear
+PASS D3D11 Linear Built-in
+CASE clothes_bk source=Assets/SymptomKaguya/cloth/material/clothes_bk.mat
+sourceSha256=DA-0E-2C-D4-72-74-EB-C6-7E-85-5A-9F-DF-0D-88-FE-45-A0-1D-8D-53-38-C2-D2-C5-8E-AF-EC-5E-5F-B3-49 shader=Hidden/lilToonOutline
+_UseBumpMap=1
+_UseBump2ndMap=1
+_BumpScale=1
+_Bump2ndScale=1
+_UseMatCap=1
+_UseMatCap2nd=1
+_ShadowStrength=1
+target=Assets/SymptomGenerated/clothes_bk_0d8dc5c8_NonToon.mat shader=nontoon-fork keywords=_JP_LILXYZW_NONTOON_DETAILS_ENABLE_1,_JP_LILXYZW_NONTOON_MATCAPS_ENABLE_1
+Detail0NormalMap=Assets/SymptomKaguya/cloth/tex/png/clothes_nor.png
+Detail1NormalMap=Assets/SymptomKaguya/cloth/tex/normal/nuno.png
+DetailMask=Assets/SymptomGenerated/clothes_bk_DetailMask_6B30017E.png
+Detail0NormalScale=1
+Detail1NormalScale=1
+FAIL clothes_bk Details keyword enabled
+PASS clothes_bk first normal texture identity
+PASS clothes_bk second normal texture identity
+FAIL System.NullReferenceException: Object reference not set to an instance of an object
+  at LilToonToNonToonConverter.NTSymptomDiagnostic.BuildGeometry (UnityEngine.Material source) [0x0004c] in .\Packages\com.catandling.nontoon-converter\Editor\NTSymptomDiagnostic.cs:91 
+  at LilToonToNonToonConverter.NTSymptomDiagnostic.Case (System.String name, System.String path) [0x00308] in .\Packages\com.catandling.nontoon-converter\Editor\NTSymptomDiagnostic.cs:67 
+  at LilToonToNonToonConverter.NTSymptomDiagnostic.Run () [0x00222] in .\Packages\com.catandling.nontoon-converter\Editor\NTSymptomDiagnostic.cs:45 
+failures=2; exit0=measurement-valid only; not symptom resolved

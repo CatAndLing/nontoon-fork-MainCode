@@ -1,0 +1,65 @@
+﻿
+
+Algorithm : SHA256
+Hash      : DA0E2CD47274EBC67E855A9FDF0D88FE45A01D8D5338C2D2C58EAFEC5E5FB349
+Path      : C:\VRC-File\kaguya\Assets\辉夜\kaguya\cloth\material\clothes_bk.mat
+
+
+
+
+
+C:\VRC-File\kaguya\Assets\辉夜\kaguya\cloth\material\clothes_bk.mat:14:  m_ValidKeywords: []
+C:\VRC-File\kaguya\Assets\辉夜\kaguya\cloth\material\clothes_bk.mat:609:    - _UseBump2ndMap: 1
+C:\VRC-File\kaguya\Assets\辉夜\kaguya\cloth\material\clothes_bk.mat:610:    - _UseBumpMap: 1
+C:\VRC-File\kaguya\Assets\辉夜\kaguya\cloth\material\clothes_bk.mat:704:    - _Shadow2ndColor: {r: 0.53773564, g: 0.53773
+564, b: 0.53773564, a: 0.8}
+C:\VRC-File\kaguya\Assets\辉夜\kaguya\cloth\material\clothes_bk.mat:709:    - _ShadowColor: {r: 0.8509804, g: 0.8509804, 
+b: 0.8509804, a: 1}
+
+
+
+
+
+Algorithm : SHA256
+Hash      : 1B721A364E954026CB072285E4F3EC6AAA3ECC078684025328C4D59A5C259529
+Path      : C:\VRC-File\kaguya\Assets\辉夜\kaguya\material\Hair.mat
+
+
+
+
+
+C:\VRC-File\kaguya\Assets\辉夜\kaguya\material\Hair.mat:14:  m_ValidKeywords: []
+C:\VRC-File\kaguya\Assets\辉夜\kaguya\material\Hair.mat:671:    - _UseBump2ndMap: 0
+C:\VRC-File\kaguya\Assets\辉夜\kaguya\material\Hair.mat:672:    - _UseBumpMap: 1
+C:\VRC-File\kaguya\Assets\辉夜\kaguya\material\Hair.mat:768:    - _Shadow2ndColor: {r: 0.53773564, g: 0.53773564, b: 0.53
+773564, a: 0.8}
+C:\VRC-File\kaguya\Assets\辉夜\kaguya\material\Hair.mat:773:    - _ShadowColor: {r: 0.8509804, g: 0.8509804, b: 0.8509804
+, a: 1}
+
+
+
+
+
+Algorithm : SHA256
+Hash      : 812587F5CDA470027416D5633F92955385A5151D7F585D41A5B1B21D9E6347DF
+Path      : C:\Users\15827\Desktop\dsh\unity\_verify-proj\Assets\SymptomGenerated\clothes_bk_0d8dc5c8_NonToon.mat
+
+
+
+
+
+_verify-proj\Assets\SymptomGenerated\clothes_bk_0d8dc5c8_NonToon.mat:14:  m_ValidKeywords:
+_verify-proj\Assets\SymptomGenerated\clothes_bk_0d8dc5c8_NonToon.mat:15:  - _JP_LILXYZW_NONTOON_DETAILS_ENABLE_1
+_verify-proj\Assets\SymptomGenerated\clothes_bk_0d8dc5c8_NonToon.mat:16:  - _JP_LILXYZW_NONTOON_MATCAPS_ENABLE_1
+_verify-proj\Assets\SymptomGenerated\clothes_bk_0d8dc5c8_NonToon.mat:143:    - _NormalMapWithRoughness: 0
+_verify-proj\Assets\SymptomGenerated\clothes_bk_0d8dc5c8_NonToon.mat:162:    - _jp_lilxyzw_nontoon_details_Enable: 1
+_verify-proj\Assets\SymptomGenerated\clothes_bk_0d8dc5c8_NonToon.mat:167:    - _jp_lilxyzw_nontoon_matcaps_Enable: 1
+_verify-proj\Assets\SymptomGenerated\clothes_bk_0d8dc5c8_NonToon.mat:175:    - _jp_lilxyzw_nontoon_shade_ShadeGradientI
+ndex: -1
+_verify-proj\Assets\SymptomGenerated\clothes_bk_0d8dc5c8_NonToon.mat:269:    - _Shadow2ndColor: {r: 0.53773564, g: 0.53
+773564, b: 0.53773564, a: 0.8}
+_verify-proj\Assets\SymptomGenerated\clothes_bk_0d8dc5c8_NonToon.mat:272:    - _ShadowColor: {r: 0.8509804, g: 0.850980
+4, b: 0.8509804, a: 1}
+
+
+

@@ -157,7 +157,6 @@ namespace NonToonTools
             SetField(comp, "quality", 3f);
             SetField(comp, "lightIntensity", intensity);
             SetField(comp, "lightColor", Color.white);
-            SetField(comp, "disableUnityShadows", true);
             EditorUtility.SetDirty(comp);
 
             // 🆕 [NT-FIX 29] **灯必须随开关启停**（用户 2026-09-17 的第二个批评：
@@ -200,10 +199,6 @@ namespace NonToonTools
             if (rig == null) { r.Warnings.Add("没有找到 " + RigName + "，无需卸载"); return r; }
 
             // 把材质开关归零（组件已经不再写它们了，但预览期可能留了值）
-            foreach (var mr in avatarRoot.GetComponentsInChildren<Renderer>(true))
-                foreach (var m in mr.sharedMaterials)
-                    if (m != null && m.HasProperty("_SelfLightRtPcss")) m.SetFloat("_SelfLightRtPcss", 0f);
-
             // MA 组件：**只摘掉 ⑥ 自己的**。
             // ⛔ 不能整个删掉 `ModularAvatarParameters` —— ⑤（亮度调整）的 `NT_Light`
             //    也注册在同一个组件里，整删会把 ⑤ 一起弄坏。

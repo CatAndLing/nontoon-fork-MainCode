@@ -27,8 +27,24 @@ public static class NTCleanInstallProbe
     private static readonly StringBuilder Sb = new StringBuilder();
     private static int Pass, Fail;
 
-    private const string ExpectedNonToon = "0.3.11";
-    private const string ExpectedConverter = "0.5.3";
+    // 期望版本**不硬编码** —— 硬编码会让本门禁在每次 bump 版本时误报。
+    // 唯一真源 = 源码的 package.json；由驱动器 `_notes/verify-clean-install.sh` 写进
+    // <测试床>/nt-expected.json。读不到就**判失败**，绝不静默退回某个默认值通过。
+    private static string ExpectedNonToon = "(未加载)";
+    private static string ExpectedConverter = "(未加载)";
+
+    private static bool LoadExpected()
+    {
+        var f = Path.Combine(Directory.GetCurrentDirectory(), "nt-expected.json");
+        if (!File.Exists(f)) return false;
+        var txt = File.ReadAllText(f);
+        var m1 = System.Text.RegularExpressions.Regex.Match(txt, "\"nontoon\"\\s*:\\s*\"([^\"]+)\"");
+        var m2 = System.Text.RegularExpressions.Regex.Match(txt, "\"converter\"\\s*:\\s*\"([^\"]+)\"");
+        if (!m1.Success || !m2.Success) return false;
+        ExpectedNonToon = m1.Groups[1].Value;
+        ExpectedConverter = m2.Groups[1].Value;
+        return true;
+    }
 
     private static void Check(bool ok, string what)
     {
@@ -52,11 +68,16 @@ public static class NTCleanInstallProbe
         try { if (File.Exists(Out)) File.Delete(Out); } catch { }
         Sb.Clear(); Pass = Fail = 0;
 
+        var expectedLoaded = LoadExpected();
+
         Sb.AppendLine("== 运行信息 ==");
         Sb.AppendLine("时间 = " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         Sb.AppendLine("工程 = " + Directory.GetCurrentDirectory());
         Sb.AppendLine("Unity = " + Application.unityVersion);
-        Sb.AppendLine("期望 = 着色器 " + ExpectedNonToon + " / 工具包 " + ExpectedConverter);
+        Sb.AppendLine("期望 = 着色器 " + ExpectedNonToon + " / 工具包 " + ExpectedConverter
+            + "（来自源码 package.json，由驱动器写入 nt-expected.json）");
+        Sb.AppendLine();
+        Check(expectedLoaded, "读到驱动器写入的期望版本（读不到 ⇒ 本门禁无效，判红；不许静默用一个默认值通过）");
         Sb.AppendLine();
 
         // ── ⓪ 测试床：决定本结论的适用范围 ────────────────────────────────────

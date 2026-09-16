@@ -44,6 +44,17 @@ if(_ShadeGradientIndex >= 0)
 
         NdotL = (NdotL - shadeRange.x) / (1-_SDFSharpen) + shadeRange.x;
     }
+
+    // [T1] 分界锐化：沿用上游 _SDFType==2 分支的惯用法（收窄 shadeRange + 拉伸 NdotL），
+    // 区别是这里的强度由用户属性给定，而不是从 SDF 贴图推导。
+    // 默认 _ShadeSharpen = 0 ⇒ 整段不执行 ⇒ 默认路径零开销。
+    if(_ShadeSharpen > 0.001)
+    {
+        half s = saturate(_ShadeSharpen);
+        half2 r2 = lerp(shadeRange.xy, (shadeRange.x + shadeRange.y) * 0.5, s);
+        shadeRange.xy = r2;
+        NdotL = (NdotL - r2.x) / max(1e-4, 1.0 - s) + r2.x;
+    }
     NdotL = min(NdotL, _ShadeGradientRange.y);
 
     half shade = saturate(NdotL) * (sd.shadow * (_ShadeGradientRange.y - _ShadeGradientRange.x) + _ShadeGradientRange.x) / _ShadeGradientRange.y;
@@ -51,4 +62,12 @@ if(_ShadeGradientIndex >= 0)
 
     // Ramp Shading
     sd.col.rgb *= SCSampleClamp(sd.gradientsTexture, float2(shade, 0.5), _ShadeGradientIndex).rgb;
+
+    // [T1] 阴影侧环境光染色：把暗部朝环境色相拉过去（工具侧用 NTAmbient 探测后写这两个属性）。
+    // 默认 _ShadeAmbientAmount = 0 ⇒ 整段不执行 ⇒ 默认路径零开销。
+    if(_ShadeAmbientAmount > 0.001)
+    {
+        half ambK = saturate(_ShadeAmbientAmount) * (1.0 - saturate(shade)) * _ShadeAmbientTint.a;
+        sd.col.rgb = lerp(sd.col.rgb, sd.col.rgb * _ShadeAmbientTint.rgb, ambK);
+    }
 }

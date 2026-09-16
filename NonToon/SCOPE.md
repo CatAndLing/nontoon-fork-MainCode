@@ -43,19 +43,32 @@ Its display name is marked as a fork.
 | **Fur** (`nontoon-fork-fur`) | Asset identity preserved. **Not validated on Radeon** — upstream issue "Fur expands unexpectedly on Radeon" is unfixed. |
 | **MatCap VR stereo parallax** | Not validated against a real stereo rendering path in this candidate. |
 | **Two-pass transparency** | Correctness verified numerically on one asset (effective-transmittance measurement). **Not** verified across a broad material matrix. |
-| **SelfLight realtime mode / companion rig** | The runtime rig lives in the **tools package** and is **not part of this candidate**. |
+| **SelfLight realtime mode / companion rig** | **Removed in tools 0.5.4; not implemented here.** See "Removed in this candidate" below — the depth-source decision is still open. |
 
 ## Removed in this candidate
 
 - The **self-rendered linear-depth PCSS path** (`useUnityShadowMap = false`) and its **15
   `_SelfLightRt*` material properties**. They were inert at their defaults and no runtime path in the
   shipped flow ever enabled them, so the shader exposed 15 controls that could not do anything.
-  The shader package now contains **no self-rendered depth code**.
-- **Known inconsistency:** the companion tools package still contains the C# half of that path. It is
-  scheduled for removal next; it is called out here rather than hidden.
+- Its renderer shader **`Shaders/Modules/SelfLight/NTRTDepth.shader` was deleted in 0.3.12** — its only
+  caller was the tools package's C# half, which was removed in tools **0.5.4**. The shader package now
+  contains **no self-rendered depth code**. ⚠️ That sentence was **false before 0.3.12** (the file was
+  still shipped while this document claimed it was gone) — corrected here rather than left standing.
 
-The active realtime self-shadow design is unchanged: a light mounted by the companion tools package,
-**Unity renders that light's shadow map, and the shader samples it**. Nothing in that path was removed.
+**The realtime self-shadow path is currently NOT implemented.** This document previously claimed
+"the active realtime self-shadow design is unchanged … nothing in that path was removed". **That claim
+was wrong and is withdrawn** (measured 2026-09-18):
+
+- The tools package's runtime rig (`NTSelfRealtimeShadow`) was **removed in 0.5.4**, because the shader
+  side had already stopped supporting it — the 15 `_SelfLightRt*` hooks went in **0.3.11**.
+- A code search finds **no shader path that samples a private light's Unity shadow map**.
+- The only self-shadow this shader performs reads the **baked** `_SelfLightShadowMap` (a distance map,
+  so its PCSS does a genuine blocker search — but the shadow's shape is **frozen at bake time**).
+
+⇒ Making realtime soft self-shadow work again requires deciding **where its depth comes from**:
+Unity's shadow map (D3D11 exposes only a **comparison** sampler ⇒ PCSS must degrade to comparison
+sampling) or a self-rendered linear depth map (which this project's frozen rules reject, so it would
+have to be un-frozen deliberately). **Undecided.**
 
 ## Known limitations (inherited; not fixed by this fork)
 

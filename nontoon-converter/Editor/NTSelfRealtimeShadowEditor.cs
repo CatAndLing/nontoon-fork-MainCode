@@ -44,15 +44,6 @@ namespace NonToonTools
             { "biasMeters",  "Depth bias (m)",      "Depth offset in metres, used to suppress shadow acne on self-occlusion." },
         };
 
-        static readonly string[,] DepthGroup =
-        {
-            { "resolution",           "Depth resolution",          "Depth map resolution. 512 is enough; 1024 is finer but costs more." },
-            { "renderEveryFrame",     "Render depth every frame",  "Render the depth map every frame. Turn off for troubleshooting." },
-            { "extraCasters",         "Extra casters",             "Extra renderers that should cast into the depth map (the avatar itself is collected automatically)." },
-            { "searchRoot",           "Search root",               "Root used to scan for casters and target materials. Leave empty to use the topmost parent of this object." },
-            { "disableUnityShadows",  "Disable Unity shadows",     "Turn the light's Unity realtime shadow off: the shadow is provided entirely by this component plus PCSS." },
-        };
-
         void DrawGroup(string title, string[,] rows)
         {
             EditorGUILayout.LabelField(L(title), EditorStyles.boldLabel);
@@ -83,16 +74,14 @@ namespace NonToonTools
             EditorGUILayout.Space();
             DrawGroup("Light", LightGroup);
             DrawGroup("Shadow (PCSS)", ShadowGroup);
-            DrawGroup("Depth map", DepthGroup);
 
             serializedObject.ApplyModifiedProperties();
 
             EditorGUILayout.LabelField(L("Hard limits (VRChat)"), EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
                 L("Realtime lights force the avatar to the Poor performance rank (Lights = 1) and are NOT " +
-                  "available on Quest. Shadow quality depends on the viewer's own Unity quality settings. " +
-                  "Do not use Unity's Soft shadows: this component turns the light's Unity shadow off on " +
-                  "purpose and provides the shadow itself."),
+                  "available on Quest. Unity provides the realtime shadow map; this component supplies the " +
+                  "optional PCSS filtering. Shadow quality depends on the viewer's own Unity quality settings."),
                 MessageType.Warning);
 
             if (c.shadowFloor < 0.05f)

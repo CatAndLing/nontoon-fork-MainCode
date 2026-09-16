@@ -61,6 +61,20 @@ grep -q "com.vrchat" "$VPMJSON" || { echo "❌ 测试床缺少 VRChat SDK（MA �
 grep -q "com.unity.feature.development" "$P/Packages/manifest.json" \
   || { echo "❌ 测试床清单不是标准模板（缺 com.unity.feature.development ⇒ VRCSDK 测试文件编译不过）" >&2; exit 2; }
 
+# 期望版本从**源码 package.json** 取（唯一真源），写进测试床给探针读 —— 不硬编码在 C# 里。
+# 这样每次 bump 版本不需要改探针；而探针读不到这个文件时**判红**，不会静默用一个默认值通过。
+PWIN="$(cygpath -w "$P" 2>/dev/null || printf '%s' "$P")"
+node -e '
+const fs = require("node:fs");
+const rd = (p) => JSON.parse(fs.readFileSync(p, "utf8")).version;
+fs.writeFileSync(process.argv[1], JSON.stringify({
+  nontoon:   rd("NonToon/package.json"),
+  converter: rd("nontoon-converter/package.json"),
+  source:    "NonToon/package.json + nontoon-converter/package.json"
+}, null, 2) + String.fromCharCode(10));
+' "$PWIN/nt-expected.json" || { echo "❌ 写 nt-expected.json 失败" >&2; exit 2; }
+echo "== 期望版本（源码唯一真源）: $(tr -d '\n ' < "$P/nt-expected.json")"
+
 RUNID="$(date +%Y%m%d-%H%M%S)-$$"
 REPORT="$P/ntcleaninstall.txt"
 echo "== run-id $RUNID / 测试床 $P =="
